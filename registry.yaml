@@ -22,3 +22,17 @@ skills:
     source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-shaders
   - name: threejs-textures
     source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-textures
+  - name: typescript-advanced-types
+    source: https://github.com/wshobson/agents/tree/main/plugins/javascript-typescript/skills//typescript-advanced-types
+  - name: brutalist-skill
+    source: https://github.com/Leonxlnx/taste-skill/skills/brutalist-skill
+  - name: minimalist-skill
+    source: https://github.com/Leonxlnx/taste-skill/skills/minimalist-skill
+  - name: output-skill
+    source: https://github.com/Leonxlnx/taste-skill/skills/output-skill
+  - name: redesign-skill
+    source: https://github.com/Leonxlnx/taste-skill/skills/redesign-skill
+  - name: soft-skill
+    source: https://github.com/Leonxlnx/taste-skill/skills/soft-skill
+  - name: taste-skill
+    source: https://github.com/Leonxlnx/taste-skill/skills/taste-skill

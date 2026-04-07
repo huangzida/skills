@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/Leonxlnx/taste-skill/skills/redesign-skill",
+  "type": "github-subdir",
+  "installed_at": "2026-04-07T10:51:35.900145783+08:00",
+  "repo_url": "https://github.com/Leonxlnx/taste-skill.git",
+  "subdir": "skills/redesign-skill",
+  "version": "f05a85b",
+  "tree_hash": "d9cffe56d26d4af7687299e391a7be1cfaf46c1b",
+  "file_hashes": {
+    "SKILL.md": "sha256:98ad3e5b051bfb71b2795f7e8a6aa0d32b51ee095606c098a4b2822ac07926c9"
+  }
+}

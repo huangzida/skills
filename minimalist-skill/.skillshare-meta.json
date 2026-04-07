@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/Leonxlnx/taste-skill/skills/minimalist-skill",
+  "type": "github-subdir",
+  "installed_at": "2026-04-07T10:51:35.880774883+08:00",
+  "repo_url": "https://github.com/Leonxlnx/taste-skill.git",
+  "subdir": "skills/minimalist-skill",
+  "version": "f05a85b",
+  "tree_hash": "5509c012862cda27e2ed7efae89ed940ecc53add",
+  "file_hashes": {
+    "SKILL.md": "sha256:36bc7328f085405f43b476938e62460fa573bf7e984e949e072bcf014831a44c"
+  }
+}
