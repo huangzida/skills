@@ -7,7 +7,116 @@ description: Use when developing or maintaining vben-admin 5.0 projects, creatin
 
 面向 vben-admin 5.0 项目的高级开发指南，整合官方文档和最佳实践。
 
-## ⚠️ 开发规范
+## ⚠️ 强制开发规范
+
+### 🚨 必须使用 vben 官方组件
+
+> **严禁自己实现 Table 和 Modal！vben-admin 提供了完整的适配层，必须使用！**
+
+| 功能 | ❌ 禁止使用 | ✅ 必须使用 |
+|------|------------|-----------|
+| 表格 | `antdv-next Table`、`html table` | `useVbenVxeGrid` from `#/adapter/vxe-table` |
+| 弹窗 | `antdv-next Modal`、`antdv-next Drawer` | `useVbenModal` from `@vben/common-ui` |
+| 表单 | 原生 Input/Select 拼装 | `useVbenForm` from `#/adapter/form` |
+| 按钮 | `antdv-next Button`、原生 button | `VbenButton` from `@vben/common-ui` |
+
+**违规示例：**
+```vue
+<!-- ❌ 错误：使用 antdv-next 的 Table 和 Modal -->
+<template>
+  <Table :columns="columns" :data-source="data" />
+  <Button @click="openModal">打开</Button>
+</template>
+
+<!-- ❌ 错误：使用原生表单组件 -->
+<template>
+  <Input v-model="form.name" />
+  <Select v-model="form.status" />
+</template>
+```
+
+**正确示例：**
+```vue
+<!-- ✅ 正确：使用 vben 官方适配层 -->
+<script setup lang="ts">
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { useVbenForm } from '#/adapter/form';
+import { useVbenModal } from '@vben/common-ui';
+import { VbenButton } from '@vben/common-ui';
+</script>
+```
+
+### 📋 CRUD 模块标准结构
+
+```
+views/
+├── your-feature/
+│   ├── index.vue           # 主页面（useVbenVxeGrid）
+│   ├── data.ts            # 列定义（useColumns）
+│   ├── mock.ts            # 模拟数据（可选）
+│   └── components/
+│       ├── CreateModal.vue    # 创建弹窗（useVbenForm + useVbenModal）
+│       ├── EditModal.vue      # 编辑弹窗（useVbenForm + useVbenModal）
+│       └── DetailDrawer.vue   # 详情抽屉（useVbenForm + useVbenDrawer）
+```
+
+### 📋 弹窗表单标准结构
+
+```vue
+<!-- components/CreateModal.vue -->
+<script setup lang="ts">
+import type { VbenFormSchema } from '#/adapter/form';
+import { useVbenModal } from '@vben/common-ui';
+import { useVbenForm, z } from '#/adapter/form';
+
+const emit = defineEmits<{ submit: [payload: any] }>();
+
+const schema: VbenFormSchema[] = [
+  { fieldName: 'name', label: '名称', component: 'Input', rules: z.string().min(1, '请输入') },
+  // ... 更多字段
+];
+
+const [Form, formApi] = useVbenForm({
+  layout: 'vertical',
+  schema,
+  showDefaultActions: false,
+});
+
+const [Modal, modalApi] = useVbenModal({
+  async onConfirm() {
+    const { valid } = await formApi.validate();
+    if (!valid) return;
+    
+    modalApi.lock();
+    try {
+      const values = await formApi.getValues();
+      emit('submit', values);
+      modalApi.close();
+    } finally {
+      modalApi.lock(false);
+    }
+  },
+  onOpenChange(isOpen) {
+    if (isOpen) formApi.resetForm();
+  },
+  title: '创建',
+});
+
+defineExpose({
+  open: () => modalApi.open(),
+});
+</script>
+
+<template>
+  <Modal>
+    <Form class="mx-4" />
+  </Modal>
+</template>
+```
+
+---
+
+## 🔧 组件拆分规范
 
 > **组件超过 200 行或包含多个功能区块时必须拆分！**
 
@@ -38,12 +147,12 @@ description: Use when developing or maintaining vben-admin 5.0 projects, creatin
 
 ### 📦 核心组件
 
-| 组件 | 文件 | Playground |
-|------|------|-----------|
-| [表单](references/components/form.md) | useVbenForm | `examples/form/` |
-| [表格](references/components/table.md) | useVbenVxeGrid | `examples/vxe-table/` |
+| 组件 | 文件 | 必须使用的 API |
+|------|------|----------------|
+| [表单](references/components/form.md) | useVbenForm | `#/adapter/form` |
+| [表格](references/components/table.md) | useVbenVxeGrid | `#/adapter/vxe-table` |
 | [图表](references/components/echarts.md) | EchartsUI + useEcharts | `dashboard/analytics/` |
-| [弹窗/抽屉](references/components/modal-drawer.md) | useVbenModal/Drawer | `examples/modal/` |
+| [弹窗/抽屉](references/components/modal-drawer.md) | useVbenModal/Drawer | `@vben/common-ui` |
 | [页面](references/components/page.md) | Page | `examples/page/` |
 
 ### 🏗️ 核心功能
@@ -99,7 +208,7 @@ vben-admin-dev/
 ├── references/
 │   ├── components/             # 组件文档
 │   ├── core/                   # 核心功能
-│   ├── features/               # 配置定制
+│   ├── features/              # 配置定制
 │   └── guides/                 # 开发指南
 │       └── component-splitting.md  # 组件拆分最佳实践
 ```
