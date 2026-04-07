@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/runkids/skillshare/main/schemas/registry.schema.json
+skills:
+  - name: skillshare
+    source: github.com/runkids/skillshare/skills/skillshare
+  - name: threejs-animation
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-animation
+  - name: threejs-fundamentals
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-fundamentals
+  - name: threejs-geometry
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-geometry
+  - name: threejs-interaction
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-interaction
+  - name: threejs-lighting
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-lighting
+  - name: threejs-loaders
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-loaders
+  - name: threejs-materials
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-materials
+  - name: threejs-postprocessing
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-postprocessing
+  - name: threejs-shaders
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-shaders
+  - name: threejs-textures
+    source: https://github.com/CloudAI-X/threejs-skills/skills/threejs-textures

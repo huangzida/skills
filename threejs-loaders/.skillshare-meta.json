@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/CloudAI-X/threejs-skills/skills/threejs-loaders",
+  "type": "github-subdir",
+  "installed_at": "2026-04-07T10:33:48.543841317+08:00",
+  "repo_url": "https://github.com/CloudAI-X/threejs-skills.git",
+  "subdir": "skills/threejs-loaders",
+  "version": "b1c6230",
+  "tree_hash": "ce4ab5647b2584a3b8b12d9a6f23604cfc59ca50",
+  "file_hashes": {
+    "SKILL.md": "sha256:03e0d7319692bb7eaa13cfada5d27d39840c7520c5ddc3fc8cc07b645dcba2e9"
+  }
+}

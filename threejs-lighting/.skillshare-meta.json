@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/CloudAI-X/threejs-skills/skills/threejs-lighting",
+  "type": "github-subdir",
+  "installed_at": "2026-04-07T10:33:48.527620617+08:00",
+  "repo_url": "https://github.com/CloudAI-X/threejs-skills.git",
+  "subdir": "skills/threejs-lighting",
+  "version": "b1c6230",
+  "tree_hash": "1a3d8f6fd58d38f7978be27790b959e1dbebf39d",
+  "file_hashes": {
+    "SKILL.md": "sha256:777875f7d6a75219d009ac69310772236231eec7cb57287c0509bb53e994af9d"
+  }
+}

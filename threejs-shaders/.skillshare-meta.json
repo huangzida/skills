@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/CloudAI-X/threejs-skills/skills/threejs-shaders",
+  "type": "github-subdir",
+  "installed_at": "2026-04-07T10:33:48.590936718+08:00",
+  "repo_url": "https://github.com/CloudAI-X/threejs-skills.git",
+  "subdir": "skills/threejs-shaders",
+  "version": "b1c6230",
+  "tree_hash": "5b8907aa3a6497db9281a6a6b4f76437ad78faee",
+  "file_hashes": {
+    "SKILL.md": "sha256:6702267bd3ee70d458b54078211db36b1c3738c3faa0570e88e33dceaf478a4d"
+  }
+}

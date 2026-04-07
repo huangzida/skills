@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/CloudAI-X/threejs-skills/skills/threejs-textures",
+  "type": "github-subdir",
+  "installed_at": "2026-04-07T10:33:48.606145718+08:00",
+  "repo_url": "https://github.com/CloudAI-X/threejs-skills.git",
+  "subdir": "skills/threejs-textures",
+  "version": "b1c6230",
+  "tree_hash": "0931e05e06091787935ef83a33d25a7e58772b73",
+  "file_hashes": {
+    "SKILL.md": "sha256:2a90ce70931e9b172fa5b70c13fd12e7b6f1600482d3ba0c73d95570fe728b65"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/CloudAI-X/threejs-skills/skills/threejs-interaction",
+  "type": "github-subdir",
+  "installed_at": "2026-04-07T10:33:48.513909817+08:00",
+  "repo_url": "https://github.com/CloudAI-X/threejs-skills.git",
+  "subdir": "skills/threejs-interaction",
+  "version": "b1c6230",
+  "tree_hash": "a977e017c2f4f393534b301c8f619183f44c5228",
+  "file_hashes": {
+    "SKILL.md": "sha256:1bb23f0388d39863432494ff00ea0a96ae7d093c0c6f3149fb223ba1e673fef6"
+  }
+}

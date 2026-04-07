@@ -1,0 +1,12 @@
+{
+  "source": "https://github.com/CloudAI-X/threejs-skills/skills/threejs-fundamentals",
+  "type": "github-subdir",
+  "installed_at": "2026-04-07T10:33:48.479775517+08:00",
+  "repo_url": "https://github.com/CloudAI-X/threejs-skills.git",
+  "subdir": "skills/threejs-fundamentals",
+  "version": "b1c6230",
+  "tree_hash": "918e26abdcc434d3ef7563043a25a97a6209b411",
+  "file_hashes": {
+    "SKILL.md": "sha256:eb66d52f53f489067d602b9b62df507adb391d8220bdd1a8aae6b73e6cee578a"
+  }
+}
