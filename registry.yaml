@@ -36,3 +36,5 @@ skills:
     source: https://github.com/Leonxlnx/taste-skill/skills/soft-skill
   - name: taste-skill
     source: https://github.com/Leonxlnx/taste-skill/skills/taste-skill
+  - name: design-md
+    source: https://github.com/google-labs-code/stitch-skills/skills/design-md
