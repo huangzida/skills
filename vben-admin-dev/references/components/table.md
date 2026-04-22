@@ -121,6 +121,106 @@ gridEvents: {
 }
 ```
 
+## 展开行（子表格）
+
+vxe-table 支持行展开显示子表格。
+
+### 列定义
+
+展开列需要使用 `type: 'expand'`，并定义 `slots.content`：
+
+```typescript
+columns: [
+  {
+    type: 'expand',
+    width: 60,
+    slots: { content: 'expand-content' },  // 只定义 content，不要定义 default
+  },
+  { field: 'name', title: '名称' },
+  // ... 其他列
+]
+```
+
+### 模板插槽
+
+```vue
+<template>
+  <Grid>
+    <!-- 其他插槽 -->
+    <template #expand-content="{ row }">
+      <div class="expand-wrapper">
+        <!-- 子表格内容，如嵌套表格 -->
+        <NestedTable :data="row.children" />
+      </div>
+    </template>
+  </Grid>
+</template>
+
+<style scoped>
+.expand-wrapper {
+  padding: 16px;
+  background: #fafafa;
+}
+</style>
+```
+
+### 完整示例
+
+```vue
+<script setup lang="ts">
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import NestedTable from './NestedTable.vue';
+
+interface ParentRow {
+  id: number;
+  name: string;
+  children?: ChildRow[];
+}
+
+interface ChildRow {
+  id: number;
+  parentId: number;
+  name: string;
+}
+
+const [Grid] = useVbenVxeGrid({
+  gridOptions: {
+    columns: [
+      {
+        type: 'expand',
+        width: 60,
+        slots: { content: 'expand-content' },
+      },
+      { field: 'name', title: '名称' },
+    ],
+    rowConfig: { keyField: 'id' },
+  },
+});
+</script>
+
+<template>
+  <Grid>
+    <template #expand-content="{ row }">
+      <div class="expand-wrapper">
+        <NestedTable
+          v-if="row.children?.length"
+          :data="row.children"
+        />
+        <div v-else class="py-4 text-center text-muted-foreground">
+          暂无子数据
+        </div>
+      </div>
+    </template>
+  </Grid>
+</template>
+```
+
+### 注意事项
+
+1. **不要定义 default 插槽**：expand 列只需要定义 `content` 插槽，不需要 `default` 插槽
+2. **样式隔离**：使用 `.expand-wrapper` 类来设置展开内容的样式
+3. **条件渲染**：确保子数据存在时再渲染子组件
+
 ## Grid API
 
 | 方法 | 说明 |
