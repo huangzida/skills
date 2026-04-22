@@ -26,9 +26,13 @@ const [Grid] = useVbenVxeGrid({
 </script>
 
 <template>
-  <Grid />
+  <Grid>
+    <template #toolbar-tools />
+  </Grid>
 </template>
 ```
+
+> **⚠️ 重要**：必须添加 `<template #toolbar-tools />` 才会渲染工具栏，即使为空也需要！
 
 ## 核心配置
 
@@ -69,6 +73,30 @@ toolbarConfig: {
   refresh: true,   // 刷新
   zoom: true,      // 全屏
 }
+```
+
+### 工具栏显示条件
+
+使用工具栏时必须满足以下条件：
+
+1. **设置 toolbarConfig**：在 gridOptions 中配置工具栏选项
+2. **使用工具栏插槽**：必须在模板中使用 `#toolbar-tools` 或 `#toolbar-actions` 插槽
+
+```vue
+<template>
+  <Grid>
+    <!-- 必须添加至少一个工具栏插槽，工具栏才会显示 -->
+    <template #toolbar-tools>
+      <!-- 你的自定义工具按钮 -->
+    </template>
+  </Grid>
+</template>
+```
+
+如果不需要自定义内容，可以使用空插槽：
+
+```vue
+<Grid><template #toolbar-tools /></Grid>
 ```
 
 ### 分页
@@ -153,13 +181,15 @@ columns: [
         <NestedTable :data="row.children" />
       </div>
     </template>
+    <!-- 工具栏插槽必须添加 -->
+    <template #toolbar-tools />
   </Grid>
 </template>
 
 <style scoped>
 .expand-wrapper {
   padding: 16px;
-  background: #fafafa;
+  background: hsl(var(--muted));
 }
 </style>
 ```
@@ -211,6 +241,7 @@ const [Grid] = useVbenVxeGrid({
         </div>
       </div>
     </template>
+    <template #toolbar-tools />
   </Grid>
 </template>
 ```
@@ -229,6 +260,21 @@ const [Grid] = useVbenVxeGrid({
 | `gridApi.query()` | 刷新当前页 |
 | `gridApi.setLoading(true)` | 设置加载状态 |
 | `gridApi.toggleSearchForm()` | 切换搜索表单 |
+
+## 常见问题
+
+### Q: 工具栏不显示？
+
+检查以下两点：
+1. 是否配置了 `toolbarConfig`
+2. 是否在模板中使用了 `#toolbar-tools` 或 `#toolbar-actions` 插槽
+
+### Q: 展开行不显示？
+
+检查列定义是否正确：
+```typescript
+slots: { content: 'expand-content' }  // 只定义 content
+```
 
 ## Playground 示例
 

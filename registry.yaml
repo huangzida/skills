@@ -40,3 +40,5 @@ skills:
     source: https://github.com/google-labs-code/stitch-skills/skills/design-md
   - name: karpathy-guidelines
     source: https://github.com/forrestchang/andrej-karpathy-skills/skills/karpathy-guidelines
+  - name: frontend-design
+    source: https://github.com/anthropics/skills/skills/frontend-design
