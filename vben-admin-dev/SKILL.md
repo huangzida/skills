@@ -178,6 +178,13 @@ defineExpose({
 | [CRUD生成](references/guides/crud-generation.md) | 标准CRUD开发流程 |
 | [构建部署](references/guides/build-deploy.md) | 构建命令、部署配置 |
 
+### 🎯 最佳实践
+
+| 主题 | 文件 | 说明 |
+|------|------|------|
+| [文件下载](references/features/download.md) | requestClient.download() | 绕过响应拦截器 |
+| [Dropdown/Popconfirm](references/components/dropdown-popconfirm.md) | 事件处理规则 | 避免重复触发 |
+
 ## 常用命令
 
 ```bash
