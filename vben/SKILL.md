@@ -1,5 +1,5 @@
 ---
-name: vben-admin-dev
+name: vben
 description: Use when developing or maintaining vben-admin 5.0 projects, creating CRUD modules, looking up component APIs, or customizing themes. Includes form/table components, routing, permissions, and login integration.
 ---
 
@@ -209,7 +209,7 @@ pnpm build            # 构建所有
 ## 目录结构
 
 ```
-vben-admin-dev/
+vben/
 ├── SKILL.md                    # 主入口
 ├── README.md                   # 快速入门
 ├── references/
