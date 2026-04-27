@@ -1441,6 +1441,18 @@
         "SKILL.md": "sha256:36bc7328f085405f43b476938e62460fa573bf7e984e949e072bcf014831a44c"
       }
     },
+    "opensrc": {
+      "source": "https://github.com/vercel-labs/opensrc/skills/opensrc",
+      "type": "github-subdir",
+      "installed_at": "2026-04-27T17:10:12.05682534+08:00",
+      "repo_url": "https://github.com/vercel-labs/opensrc.git",
+      "subdir": "skills/opensrc",
+      "version": "de4f7a4",
+      "tree_hash": "0584838f454836cf26b7170348df5e266a7c2a79",
+      "file_hashes": {
+        "SKILL.md": "sha256:2c4d873a423e30dbdbabc30b104bef8f09eae00d9a186a952dfc88c53e2e34fb"
+      }
+    },
     "output-skill": {
       "source": "https://github.com/Leonxlnx/taste-skill.git/skills/output-skill",
       "type": "github-subdir",
