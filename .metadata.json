@@ -1180,6 +1180,75 @@
         "canvas-fonts/YoungSerif-Regular.ttf": "sha256:f8dc08f77abad753a00670af70756a8ace938e5c3f0b770f4f4c2071c4bd8fc6"
       }
     },
+    "caveman": {
+      "source": "github.com/JuliusBrussee/caveman/caveman",
+      "type": "github-subdir",
+      "installed_at": "2026-04-28T15:53:58.957312432+08:00",
+      "repo_url": "https://github.com/JuliusBrussee/caveman.git",
+      "subdir": "caveman",
+      "version": "84cc3c1",
+      "tree_hash": "825e13085d1515fe67881b2123f3bf9b34c26154",
+      "file_hashes": {
+        "SKILL.md": "sha256:f9c83a2b20fc3b3503af9d1ae1cf2098c9f8c3d326c203c236b160ebe81ac8f0"
+      }
+    },
+    "caveman-commit": {
+      "source": "github.com/JuliusBrussee/caveman/skills/caveman-commit",
+      "type": "github-subdir",
+      "installed_at": "2026-04-28T15:53:59.081105261+08:00",
+      "repo_url": "https://github.com/JuliusBrussee/caveman.git",
+      "subdir": "skills/caveman-commit",
+      "version": "84cc3c1",
+      "tree_hash": "f8d14c8de94e55b43de62b4b3081230248e2f481",
+      "file_hashes": {
+        "SKILL.md": "sha256:9ea361c8617aaabb0dada200c0bbe3f3eb9e4a28d44366b1d3a6e4ef600e96e2"
+      }
+    },
+    "caveman-compress": {
+      "source": "github.com/JuliusBrussee/caveman/caveman-compress",
+      "type": "github-subdir",
+      "installed_at": "2026-04-28T15:53:59.011948515+08:00",
+      "repo_url": "https://github.com/JuliusBrussee/caveman.git",
+      "subdir": "caveman-compress",
+      "version": "84cc3c1",
+      "tree_hash": "c58e4ecb3f2748626d43c54479e67a4c0fe46f3d",
+      "file_hashes": {
+        "README.md": "sha256:a672f616b63f88d2d9bf41e4df0ab5e8e3292ffaa3142b7e62bc83a87ca5a54f",
+        "SECURITY.md": "sha256:ac3432493cfe71368a141f437bf35562eb8f4ce07ae699e5399c0cb665e02da3",
+        "SKILL.md": "sha256:1c7997b306c23a34ec9998da515aff3d9a6fd7973225f0c4faeeb00b851b87f4",
+        "scripts/__init__.py": "sha256:429c3e1c5cc5b9705f28d77f303c728304ae68693913ad3d5ce9b5a44c8ee40f",
+        "scripts/__main__.py": "sha256:6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+        "scripts/benchmark.py": "sha256:842f208bde8150d17e312eae851c9b0831533339a7c9b3562aaa5a231f40eebf",
+        "scripts/cli.py": "sha256:74c740a128afa5cbc1db17289ff3dc0cfe331917ff9c3a532f2884299b3620f6",
+        "scripts/compress.py": "sha256:284c78340cd30d5a4844e0e3ce5acbb559f9ba438f50bca919471fa85b409c24",
+        "scripts/detect.py": "sha256:c57e92a43e0ce6e740c9e836d07fe46e70ed00b3d8bd5e9124f78cbb156274bd",
+        "scripts/validate.py": "sha256:a42e60345ec4033bd71ce76e2fba7395b14d18b623657d5434b0f49443003d75"
+      }
+    },
+    "caveman-help": {
+      "source": "github.com/JuliusBrussee/caveman/skills/caveman-help",
+      "type": "github-subdir",
+      "installed_at": "2026-04-28T15:53:59.106409538+08:00",
+      "repo_url": "https://github.com/JuliusBrussee/caveman.git",
+      "subdir": "skills/caveman-help",
+      "version": "84cc3c1",
+      "tree_hash": "0456947ac9539b1f8cba536f3b7a19d7a0f4eb91",
+      "file_hashes": {
+        "SKILL.md": "sha256:46f86b3ff5184f4d43f0794c4f54b1b53fee284014613428f0f477e17edad06f"
+      }
+    },
+    "caveman-review": {
+      "source": "github.com/JuliusBrussee/caveman/skills/caveman-review",
+      "type": "github-subdir",
+      "installed_at": "2026-04-28T15:53:59.131217172+08:00",
+      "repo_url": "https://github.com/JuliusBrussee/caveman.git",
+      "subdir": "skills/caveman-review",
+      "version": "84cc3c1",
+      "tree_hash": "2147719da5f81255dbf960d6ce46d5a7ee9d0860",
+      "file_hashes": {
+        "SKILL.md": "sha256:9ef09065f26b9781275b5a4775e14870e331fab833efb2a2aa33f3205a2b83c3"
+      }
+    },
     "claude-api": {
       "source": "https://github.com/anthropics/skills/skills/claude-api",
       "type": "github-subdir",
@@ -1230,6 +1299,25 @@
         "typescript/claude-api/streaming.md": "sha256:92813bdc545b87599c04853cbd4a2f5204693f8cc07996be9b6570e2a662cad5",
         "typescript/claude-api/tool-use.md": "sha256:636e5ad9826aef67fea9e2aea86ae48cfa54532eedaa37171dc1f9d401469f11",
         "typescript/managed-agents/README.md": "sha256:bf7184e496d84d166ef2ba205a5e29ad6cc673ae03b0893219d125ab2c52ce23"
+      }
+    },
+    "compress": {
+      "source": "github.com/JuliusBrussee/caveman/plugins/caveman/skills/compress",
+      "type": "github-subdir",
+      "installed_at": "2026-04-28T15:53:59.058086892+08:00",
+      "repo_url": "https://github.com/JuliusBrussee/caveman.git",
+      "subdir": "plugins/caveman/skills/compress",
+      "version": "84cc3c1",
+      "tree_hash": "fc6ecd3c4081d88c72aa55908ec36841f7c7bf9b",
+      "file_hashes": {
+        "SKILL.md": "sha256:63d93d9a9e9f8da9e7864f11772ee4a714dd7253b51f55efc81b0292beb88ffc",
+        "scripts/__init__.py": "sha256:429c3e1c5cc5b9705f28d77f303c728304ae68693913ad3d5ce9b5a44c8ee40f",
+        "scripts/__main__.py": "sha256:6d8b7d7846a845059d7a3107143f11131f63c5511d669b44085b15ec5e3d2279",
+        "scripts/benchmark.py": "sha256:842f208bde8150d17e312eae851c9b0831533339a7c9b3562aaa5a231f40eebf",
+        "scripts/cli.py": "sha256:74c740a128afa5cbc1db17289ff3dc0cfe331917ff9c3a532f2884299b3620f6",
+        "scripts/compress.py": "sha256:284c78340cd30d5a4844e0e3ce5acbb559f9ba438f50bca919471fa85b409c24",
+        "scripts/detect.py": "sha256:c57e92a43e0ce6e740c9e836d07fe46e70ed00b3d8bd5e9124f78cbb156274bd",
+        "scripts/validate.py": "sha256:a42e60345ec4033bd71ce76e2fba7395b14d18b623657d5434b0f49443003d75"
       }
     },
     "design-md": {
