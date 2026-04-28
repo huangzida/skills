@@ -154,6 +154,7 @@ defineExpose({
 | [图表](references/components/echarts.md) | EchartsUI + useEcharts | `dashboard/analytics/` |
 | [弹窗/抽屉](references/components/modal-drawer.md) | useVbenModal/Drawer | `@vben/common-ui` |
 | [页面](references/components/page.md) | Page | `examples/page/` |
+| [自定义组件](references/core/adapter.md) | InputNumberRange / IpInput / MacInput / TreeSelectWithCustomInput / Popconfirm | `#/adapter/component` |
 
 ### 🏗️ 核心功能
 
