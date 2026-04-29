@@ -149,7 +149,7 @@ defineExpose({
 
 | 组件 | 文件 | 必须使用的 API |
 |------|------|----------------|
-| [表单](references/components/form.md) | useVbenForm | `#/adapter/form` |
+| [表单](references/components/form.md) | useVbenForm | `#/adapter/form` | valueFormat 字段格式化 |
 | [表格](references/components/table.md) | useVbenVxeGrid | `#/adapter/vxe-table` |
 | [图表](references/components/echarts.md) | EchartsUI + useEcharts | `dashboard/analytics/` |
 | [弹窗/抽屉](references/components/modal-drawer.md) | useVbenModal/Drawer | `@vben/common-ui` |

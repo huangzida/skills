@@ -372,6 +372,117 @@ import { VbenButton } from '@vben/common-ui';
 }
 ```
 
+## 值格式化（valueFormat）
+
+当组件的展示值与后端真正需要的 payload 不一致时，可以使用 `valueFormat` 进行转换。它会在 `getValues()`、提交、以及依赖这些输出的方法中生效。
+
+### 三种返回值模式
+
+| 返回值 | 行为 | 适用场景 |
+|--------|------|----------|
+| `return xxx` | 回写当前字段 | 格式转换（如 Date → 时间戳） |
+| `setValue('field', xxx)` | 写入其他字段 | 字段拆分（如 RangePicker → startTime/endTime） |
+| `return undefined` | 删除当前字段 | 字段移除（如隐藏字段） |
+
+### 字段拆分示例（RangePicker → startTime/endTime）
+
+```typescript
+{
+  component: 'RangePicker',
+  fieldName: 'reportRange',
+  help: '通过 setValue 拆分为 startTime / endTime，并移除原字段',
+  label: '统计时间范围',
+  valueFormat(value, setValue) {
+    setValue('startTime', value?.[0]?.valueOf());
+    setValue('endTime', value?.[1]?.valueOf());
+  },
+},
+```
+
+### 格式转换示例（Date → timestamp）
+
+```typescript
+{
+  component: 'DatePicker',
+  fieldName: 'deadline',
+  help: '直接 return 时间戳，保留原字段名',
+  label: '截止时间',
+  valueFormat(value) {
+    return value?.valueOf();
+  },
+},
+```
+
+### 完整示例
+
+```vue
+<script lang="ts" setup>
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { Button, Card, message, Space, Tag } from 'ant-design-vue';
+import { useVbenForm } from '#/adapter/form';
+
+const transformedValues = ref<Record<string, any>>({});
+const liveValues = ref<Record<string, any>>({});
+
+const [Form, formApi] = useVbenForm({
+  commonConfig: {
+    componentProps: {
+      class: 'w-full',
+    },
+  },
+  handleSubmit,
+  schema: [
+    {
+      component: 'RangePicker',
+      fieldName: 'reportRange',
+      help: '通过 setValue 拆分为 startTime / endTime，并移除原字段',
+      label: '统计时间范围',
+      valueFormat(value, setValue) {
+        setValue('startTime', value?.[0]?.valueOf());
+        setValue('endTime', value?.[1]?.valueOf());
+      },
+    },
+    {
+      component: 'DatePicker',
+      fieldName: 'deadline',
+      help: '直接 return 时间戳，保留原字段名',
+      label: '截止时间',
+      valueFormat(value) {
+        return value?.valueOf();
+      },
+    },
+    {
+      component: 'Input',
+      componentProps: {
+        placeholder: '请输入关键字',
+      },
+      fieldName: 'keyword',
+      label: '关键字',
+    },
+  ],
+  wrapperClass: 'grid-cols-1 md:grid-cols-2',
+});
+
+async function handleInspectValues() {
+  const values = await formApi.getValues();
+  console.log('valueFormat 后的值:', values);
+}
+
+function handleSubmit(values: Record<string, any>) {
+  message.success({ content: `提交值: ${JSON.stringify(values)}` });
+}
+</script>
+
+<template>
+  <Space wrap>
+    <Tag color="processing">return 值：回写当前字段</Tag>
+    <Tag color="success">setValue：拆分写入其他字段</Tag>
+    <Tag color="warning">return undefined：保持原字段删除</Tag>
+  </Space>
+  <Form />
+</template>
+```
+
 ## Form API
 
 | 方法 | 说明 |
