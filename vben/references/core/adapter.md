@@ -18,6 +18,135 @@ src/adapter/
 └── index.ts          # 适配器汇总
 ```
 
+## ApiComponent 远程数据组件
+
+ApiComponent 是 API 包装器，为组件提供远程数据能力。
+
+### 基础用法
+
+```vue
+<script setup lang="ts">
+import { ApiComponent } from '@vben/common-ui';
+import { Select } from 'ant-design-vue';
+
+const options = ref([]);
+const loading = ref(false);
+
+async function fetchOptions() {
+  loading.value = true;
+  const res = await getOptionsApi();
+  options.value = res.items;
+  loading.value = false;
+}
+</script>
+
+<template>
+  <ApiComponent
+    :api="fetchOptions"
+    :component="Select"
+    :options="options"
+    label-field="label"
+    value-field="value"
+  />
+</template>
+```
+
+### ApiComponent Props
+
+| 属性 | 说明 | 类型 | 默认值 |
+|------|------|------|--------|
+| `api` | 获取数据的函数 | `() => Promise<any>` | - |
+| `params` | 传递给 api 的参数 | `Record<string, any>` | - |
+| `resultField` | 从结果中提取 options 的字段 | `string` | - |
+| `labelField` | label 字段名 | `string` | `label` |
+| `valueField` | value 字段名 | `string` | `value` |
+| `childrenField` | 子级数据字段（树形） | `string` | - |
+| `options` | 直接传入选项数据 | `OptionsItem[]` | - |
+| `immediate` | 是否立即调用 api | `boolean` | `true` |
+| `alwaysLoad` | 每次 visibleEvent 都重新请求 | `boolean` | `false` |
+| `beforeFetch` | 请求前回调 | `Function` | - |
+| `afterFetch` | 请求后回调 | `Function` | - |
+| `numberToString` | value 从数字转为字符串 | `boolean` | `false` |
+| `visibleEvent` | 触发重新请求的事件名 | `string` | - |
+| `loadingSlot` | 加载中插槽名 | `string` | - |
+| `autoSelect` | 自动选择选项 | `'first'\|'last'\|'one'\|Function\|false` | `false` |
+
+### autoSelect 自动选择
+
+```vue
+<template>
+  <!-- 自动选择第一个 -->
+  <ApiComponent :api="fetchOptions" :component="Select" auto-select="first" />
+
+  <!-- 自动选择最后一个 -->
+  <ApiComponent :api="fetchOptions" :component="Select" auto-select="last" />
+
+  <!-- 有且只有一个时自动选择 -->
+  <ApiComponent :api="fetchOptions" :component="Select" auto-select="one" />
+
+  <!-- 自定义选择逻辑 -->
+  <ApiComponent
+    :api="fetchOptions"
+    :component="Select"
+    :auto-select="(items) => items.find(i => i.default)"
+  />
+</template>
+```
+
+### beforeFetch / afterFetch 数据处理
+
+```vue
+<ApiComponent
+  :api="fetchOptions"
+  :component="Select"
+  :before-fetch="(params) => {
+    // 添加 token
+    return { ...params, token: getToken() };
+  }"
+  :after-fetch="(data) => {
+    // 转换数据格式
+    return data.map(item => ({
+      label: item.name,
+      value: item.id,
+    }));
+  }"
+/>
+```
+
+### 完整示例：级联选择器
+
+```vue
+<script setup lang="ts">
+import { ApiComponent } from '@vben/common-ui';
+import { Cascader } from 'ant-design-vue';
+
+function fetchAreas() {
+  return getAreasApi();
+}
+</script>
+
+<template>
+  <ApiComponent
+    :api="fetchAreas"
+    :component="Cascader"
+    :immediate="false"
+    children-field="children"
+    loading-slot="suffixIcon"
+    visible-event="onDropdownVisibleChange"
+    :options="[]"
+  />
+</template>
+```
+
+### ApiComponent Methods
+
+| 方法 | 说明 |
+|------|------|
+| `getComponentRef()` | 获取被包装组件的实例 |
+| `updateParam(newParams)` | 更新请求参数 |
+| `getOptions()` | 获取已加载的选项数据 |
+| `getValue()` | 获取当前值 |
+
 ## 表单适配器
 
 ```typescript

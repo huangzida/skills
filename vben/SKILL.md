@@ -147,14 +147,14 @@ defineExpose({
 
 ### 📦 核心组件
 
-| 组件 | 文件 | 必须使用的 API |
-|------|------|----------------|
-| [表单](references/components/form.md) | useVbenForm | `#/adapter/form` | valueFormat 字段格式化 |
-| [表格](references/components/table.md) | useVbenVxeGrid | `#/adapter/vxe-table` |
+| 组件 | 文件 | 特性 |
+|------|------|------|
+| [表单](references/components/form.md) | useVbenForm | valueFormat、fieldMappingTime、dependencies、handleValuesChange |
+| [表格](references/components/table.md) | useVbenVxeGrid | treeConfig、editConfig、virtual scroll、自定义渲染器 |
 | [图表](references/components/echarts.md) | EchartsUI + useEcharts | `dashboard/analytics/` |
-| [弹窗/抽屉](references/components/modal-drawer.md) | useVbenModal/Drawer | `@vben/common-ui` |
+| [弹窗/抽屉](references/components/modal-drawer.md) | useVbenModal/Drawer | lock/unlock、connectedComponent、appendToMain |
 | [页面](references/components/page.md) | Page | `examples/page/` |
-| [自定义组件](references/core/adapter.md) | InputNumberRange / IpInput / MacInput / TreeSelectWithCustomInput / Popconfirm | `#/adapter/component` |
+| [自定义组件](references/core/adapter.md) | InputNumberRange / IpInput / MacInput / TreeSelectWithCustomInput / Popconfirm / ApiComponent | `#/adapter/component` | ApiComponent 远程数据、beforeFetch/afterFetch、autoSelect |
 
 ### 🏗️ 核心功能
 

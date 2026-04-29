@@ -372,6 +372,84 @@ import { VbenButton } from '@vben/common-ui';
 }
 ```
 
+### dependencies 完整配置
+
+```typescript
+dependencies: {
+  triggerFields: ['name'],           // 触发字段
+  if(values, formApi) {},             // 动态显示/销毁
+  show(values, formApi) {},            // CSS 隐藏
+  disabled(values, formApi) {},       // 禁用状态
+  trigger(values, formApi) {},        // 每次变更触发
+  rules(values, formApi) {},          // 动态规则
+  required(values, formApi) {},        // 动态必填
+  componentProps(values, formApi) {}, // 动态组件参数
+}
+```
+
+## 值映射（fieldMappingTime）
+
+官方推荐的日期范围映射方式，比 `valueFormat` 更简洁：
+
+```typescript
+const [Form, formApi] = useVbenForm({
+  // 将 timeRange 数组映射为 startTime / endTime
+  fieldMappingTime: [
+    ['timeRange', ['startTime', 'endTime'], 'YYYY-MM-DD'],
+  ],
+  schema: [
+    {
+      component: 'RangePicker',
+      fieldName: 'timeRange',
+      label: '时间范围',
+    },
+  ],
+});
+```
+
+### 映射规则说明
+
+| 参数 | 说明 |
+|------|------|
+| 第一个参数 | 源字段名（数组类型，如 RangePicker） |
+| 第二个参数 | 目标字段名数组 `[开始时间, 结束时间]` |
+| 第三个参数 | 可选，日期格式掩码（如 `'YYYY-MM-DD'`） |
+
+### 自定义格式化函数
+
+```typescript
+fieldMappingTime: [
+  [
+    'reportRange',
+    ['startTime', 'endTime'],
+    (value, fieldName) => {
+      // 自定义格式化逻辑
+      return value?.valueOf();
+    },
+  ],
+],
+```
+
+## 表单值变化（handleValuesChange）
+
+监听表单值变化，用于联动逻辑或实时保存：
+
+```typescript
+const [Form, formApi] = useVbenForm({
+  handleValuesChange(values, fieldsChanged) {
+    console.log('变化的值:', values);
+    console.log('变化的字段:', fieldsChanged);
+    
+    // 根据字段变化执行联动
+    if (fieldsChanged.includes('category')) {
+      // 分类变化时，重置子分类
+      formApi.setFieldValue('subCategory', undefined);
+    }
+  },
+  // ...
+});
+```
+
 ## 值格式化（valueFormat）
 
 当组件的展示值与后端真正需要的 payload 不一致时，可以使用 `valueFormat` 进行转换。它会在 `getValues()`、提交、以及依赖这些输出的方法中生效。
@@ -483,17 +561,181 @@ function handleSubmit(values: Record<string, any>) {
 </template>
 ```
 
+## 通用配置（commonConfig）
+
+为所有字段设置统一的默认配置：
+
+```typescript
+const [Form, formApi] = useVbenForm({
+  commonConfig: {
+    componentProps: {
+      class: 'w-full',  // 所有组件宽度 100%
+    },
+    labelWidth: 120,     // 统一标签宽度
+    disabled: false,     // 统一禁用状态
+  },
+});
+```
+
+### commonConfig 属性
+
+| 属性 | 说明 |
+|------|------|
+| `componentProps` | 所有字段的组件默认参数 |
+| `labelWidth` | 统一标签宽度 |
+| `disabled` | 统一禁用状态 |
+| `hideLabel` | 隐藏所有标签 |
+| `hideRequiredMark` | 隐藏必填标记 |
+| `colon` | 标签后显示冒号 |
+| `controlClass` | 控件样式类 |
+| `wrapperClass` | 包裹层样式类 |
+
+## 查询表单（submitOnChange）
+
+用于表格搜索表单，字段变化时自动触发查询：
+
+```typescript
+const [Form, formApi] = useVbenForm({
+  submitOnChange: true,  // 字段变化时自动查询
+  handleSubmit: (values) => {
+    gridApi.query(values);
+  },
+});
+```
+
+## 操作按钮配置
+
+### 自定义按钮文本和样式
+
+```typescript
+const [Form, formApi] = useVbenForm({
+  submitButtonOptions: {
+    content: '保存',
+    variant: 'primary',
+  },
+  resetButtonOptions: {
+    content: '重置',
+    variant: 'default',
+  },
+});
+```
+
+### 隐藏操作按钮
+
+```typescript
+const [Form, formApi] = useVbenForm({
+  showDefaultActions: false,  // 隐藏默认按钮
+});
+```
+
 ## Form API
 
 | 方法 | 说明 |
 |------|------|
 | `formApi.setFieldValue(name, value)` | 设置单个字段值 |
-| `formApi.setValues(values)` | 设置多个字段值 |
+| `formApi.setValues(values, filterFields?, shouldValidate?)` | 设置多个字段值，可选过滤字段 |
 | `formApi.getValues()` | 获取表单值 |
 | `formApi.validate()` | 校验表单 |
 | `formApi.resetForm()` | 重置表单 |
 | `formApi.validateAndSubmitForm()` | 校验并提交 |
 | `formApi.updateSchema(schema)` | 更新字段配置 |
+| `formApi.validateField(name)` | 校验单个字段 |
+| `formApi.isFieldValid(name)` | 检查字段是否通过校验 |
+| `formApi.getFieldComponentRef(name)` | 获取字段组件实例 |
+| `formApi.getFocusedField()` | 获取当前焦点的字段 |
+| `formApi.setState(state)` | 设置组件状态 |
+| `formApi.getState()` | 获取组件状态 |
+
+### setValues 过滤字段
+
+```typescript
+// 默认过滤不在 schema 中的字段
+await formApi.setValues({ extraField: 'xxx' });  // extraField 会被过滤掉
+
+// 关闭过滤，保留额外字段
+await formApi.setValues({ extraField: 'xxx' }, false);
+```
+
+## 折叠配置
+
+支持表单项折叠/展开功能：
+
+```typescript
+const [Form, formApi] = useVbenForm({
+  showCollapseButton: true,  // 显示折叠按钮
+  collapsed: false,          // 默认展开
+  collapsedRows: 1,          // 折叠时显示 1 行
+  handleCollapsedChange: (collapsed) => {
+    console.log('折叠状态:', collapsed);
+  },
+  schema: [
+    { fieldName: 'field1', component: 'Input', label: '字段1' },
+    { fieldName: 'field2', component: 'Input', label: '字段2' },
+    // ... 更多字段
+  ],
+});
+```
+
+### 折叠相关配置
+
+| 配置 | 说明 |
+|------|------|
+| `showCollapseButton` | 显示折叠按钮 |
+| `collapsed` | 默认折叠状态 |
+| `collapsedRows` | 折叠时保留的行数 |
+| `collapseTriggerResize` | 折叠时触发 resize 事件 |
+| `handleCollapsedChange` | 折叠状态变化回调 |
+
+## 操作区域布局
+
+```typescript
+const [Form, formApi] = useVbenForm({
+  actionLayout: 'rowEnd',    // 'newLine'|'rowEnd'|'inline'
+  actionPosition: 'right',   // 'left'|'center'|'right'
+  actionButtonsReverse: false, // 调换按钮位置
+});
+```
+
+### 布局配置
+
+| 配置 | 说明 |
+|------|------|
+| `actionLayout` | 按钮布局：newLine(新行)、rowEnd(行尾)、inline(行内) |
+| `actionPosition` | 按钮对齐：left、center、right |
+| `actionButtonsReverse` | 调换重置/提交按钮位置 |
+
+## 字段高级属性
+
+```typescript
+{
+  fieldName: 'description',
+  label: '描述',
+  component: 'Textarea',
+  description: '这是一段帮助说明文字',  // 字段描述
+  hide: false,  // 是否隐藏字段
+  defaultValue: '默认值',  // 默认值
+  renderComponentContent: {},  // 自定义组件内容
+}
+```
+
+### 字段属性说明
+
+| 属性 | 说明 |
+|------|------|
+| `description` | 字段描述信息 |
+| `hide` | 是否隐藏表单项（CSS 隐藏） |
+| `defaultValue` | 字段默认值 |
+| `renderComponentContent` | 自定义组件内部渲染内容 |
+
+## 其他 Props 配置
+
+| 属性 | 说明 |
+|------|------|
+| `submitOnEnter` | 按下回车键时提交表单 |
+| `scrollToFirstError` | 验证失败时滚动到第一个错误字段 |
+| `compact` | 紧凑模式（忽略校验信息预留空间） |
+| `handleReset` | 表单重置回调 |
+| `handleSubmit` | 表单提交回调 |
 
 ## Playground 示例
 
@@ -504,47 +746,3 @@ function handleSubmit(values: Record<string, any>) {
 | 表单联动 | `examples/form/linkage.vue` |
 | 表单校验 | `examples/form/rules.vue` |
 | 弹窗表单 | `examples/modal/form-modal-demo.vue` |
-
-### Textarea 字数统计（showCount）最佳实践
-
-当 Textarea 组件启用 `showCount: true` 时，字数统计可能因父容器 `overflow: hidden` 而显示异常。
-
-#### ✅ 正确写法
-
-使用 `formItemClass` 定义类名，配合 CSS 修复显示问题：
-
-```typescript
-{
-  formItemClass: 'textarea-form-item',
-  component: 'Textarea',
-  componentProps: {
-    maxlength: 200,
-    showCount: true,
-    rows: 3,
-  },
-  fieldName: 'description',
-  label: '说明',
-}
-```
-
-```typescript
-<style scoped>
-:deep(.textarea-form-item > div) {
-  overflow: visible;
-}
-</style>
-```
-
-#### ❌ 错误写法
-
-直接在 `wrapperClass` 上设置样式（容易被覆盖，且作用域不精确）：
-
-```typescript
-{
-  wrapperClass: 'custom-wrapper',
-  component: 'Textarea',
-  componentProps: { showCount: true },
-}
-```
-
-> 注意：命名应使用 `formItemClass` 而非 `wrapperClass`，因为 showCount 的后缀元素渲染在 formItem 内。

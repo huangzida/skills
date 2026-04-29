@@ -51,6 +51,14 @@ columns: [
 
 ```typescript
 proxyConfig: {
+  autoLoad: true,                    // 初始化时自动加载
+  showActiveMsg: true,               // 显示激活消息
+  showResponseMsg: false,            // 显示响应消息
+  response: {
+    result: 'items',                 // 数据数组字段
+    total: 'total',                 // 总数字段
+    list: 'items',                   // 列表字段
+  },
   ajax: {
     query: async ({ page, sort, form }) => {
       return await getListApi({
@@ -63,6 +71,17 @@ proxyConfig: {
   },
 }
 ```
+
+### 代理配置说明
+
+| 配置 | 说明 |
+|------|------|
+| `autoLoad` | 初始化时自动加载数据 |
+| `showActiveMsg` | 显示加载激活消息 |
+| `showResponseMsg` | 显示响应消息 |
+| `response.result` | 数据数组字段路径 |
+| `response.total` | 总数字段路径 |
+| `response.list` | 列表字段路径 |
 
 ### 工具栏
 
@@ -260,6 +279,308 @@ const [Grid] = useVbenVxeGrid({
 | `gridApi.query()` | 刷新当前页 |
 | `gridApi.setLoading(true)` | 设置加载状态 |
 | `gridApi.toggleSearchForm()` | 切换搜索表单 |
+| `gridApi.setGridOptions()` | 更新表格配置 |
+| `gridApi.grid` | vxe-grid 实例 |
+| `gridApi.formApi` | 搜索表单 API |
+
+## 表格基础配置
+
+```typescript
+const [Grid] = useVbenVxeGrid({
+  gridOptions: {
+    height: 'auto',                   // 表格高度
+    showOverflow: true,               // 单元格内容溢出显示...
+    border: true,                     // 显示边框
+    round: true,                      // 圆角
+    size: 'small',                   // 表格尺寸
+    align: 'center',                 // 默认对齐方式
+    rowConfig: {
+      keyField: 'id',                // 行唯一标识字段
+    },
+    columnConfig: {
+      resizable: true,               // 列可调整宽度
+    },
+  },
+});
+```
+
+### 基础配置说明
+
+| 配置 | 说明 |
+|------|------|
+| `height` | 表格高度，默认 `'auto'` |
+| `showOverflow` | 溢出显示... |
+| `border` | 显示边框 |
+| `round` | 圆角 |
+| `size` | 尺寸：`small`/`medium`/`large` |
+| `align` | 对齐方式 |
+| `rowConfig.keyField` | 行唯一标识字段 |
+| `columnConfig.resizable` | 列宽可调整 |
+
+## 表格事件（gridEvents）
+
+```typescript
+const [Grid, gridApi] = useVbenVxeGrid({
+  gridEvents: {
+    // 复选框变化
+    checkboxChange: ({ records }) => {
+      console.log('选中行:', records);
+    },
+    // 单选框变化
+    radioChange: ({ row }) => {
+      console.log('选中行:', row);
+    },
+    // 排序变化
+    sortChange: ({ field, order }) => {
+      console.log('排序:', field, order);
+    },
+    // 编辑关闭
+    editClosed: async ({ row }) => {
+      await saveRowApi(row);
+    },
+    // 滚动
+    scroll: ({ scrollTop, scrollLeft }) => {
+      console.log('滚动位置:', scrollTop, scrollLeft);
+    },
+    // 行点击
+    cellClick: ({ row, column }) => {
+      console.log('点击单元格:', row, column);
+    },
+  },
+});
+```
+
+### 常用事件
+
+| 事件 | 说明 |
+|------|------|
+| `checkboxChange` | 复选框变化 |
+| `radioChange` | 单选框变化 |
+| `sortChange` | 排序变化 |
+| `filterChange` | 筛选变化 |
+| `editClosed` | 编辑关闭 |
+| `editActived` | 编辑激活 |
+| `scroll` | 滚动 |
+| `cellClick` | 单元格点击 |
+| `cellDblClick` | 单元格双击 |
+| `toolbarButtonClick` | 工具栏按钮点击 |
+
+## 树形表格（treeConfig）
+
+扁平数据转换为树形展示：
+
+```typescript
+const [Grid] = useVbenVxeGrid({
+  gridOptions: {
+    treeConfig: {
+      transform: true,        // 开启转换
+      parentField: 'parentId',  // 父字段名
+      rowField: 'id',           // 主键字段名
+    },
+    columns: [
+      { type: 'seq', title: '序号', width: 60 },
+      { field: 'name', title: '名称', treeNode: true },  // 添加 treeNode 显示树线
+    ],
+  },
+});
+```
+
+### 树形表格配置
+
+| 属性 | 说明 |
+|------|------|
+| `transform` | 是否将扁平数据转换为树形 |
+| `parentField` | 父级字段名 |
+| `rowField` | 主键字段名 |
+| `children` | 子数据字段名（默认 children） |
+| `indent` | 缩进距离 |
+| `expandAll` | 默认展开全部 |
+
+## 单元格编辑（editConfig）
+
+### 单元格编辑模式
+
+```typescript
+const [Grid, gridApi] = useVbenVxeGrid({
+  gridOptions: {
+    editConfig: {
+      trigger: 'click',  // 点击编辑
+      mode: 'cell',      // 单元格编辑
+      showStatus: true,  // 显示编辑状态图标
+    },
+    editRules: {
+      name: [{ required: true, message: '名称不能为空' }],
+    },
+  },
+  gridEvents: {
+    editClosed: async ({ row }) => {
+      // 保存编辑后的行数据
+      await updateRowApi(row);
+    },
+  },
+});
+```
+
+### 行编辑模式
+
+```typescript
+editConfig: {
+  trigger: 'click',
+  mode: 'row',  // 整行编辑
+}
+```
+
+### 编辑触发方式
+
+| trigger | 说明 |
+|---------|------|
+| `click` | 点击单元格 |
+| `dblclick` | 双击单元格 |
+| `manual` | 手动模式 |
+
+## 固定列（fixed）
+
+列固定在左侧或右侧：
+
+```typescript
+columns: [
+  { type: 'seq', width: 60, fixed: 'left' },
+  { field: 'name', title: '姓名' },
+  { field: 'actions', title: '操作', fixed: 'right' },
+]
+```
+
+### 固定位置
+
+| 值 | 说明 |
+|----|------|
+| `left` | 固定在左侧 |
+| `right` | 固定在右侧 |
+| `''` 或 `null` | 不固定 |
+
+## 虚拟滚动（virtual）
+
+大数据量时启用虚拟滚动：
+
+```typescript
+const [Grid] = useVbenVxeGrid({
+  gridOptions: {
+    scroll-y: {
+      enabled: true,
+      gt: 100,  // 超过 100 行启用虚拟滚动
+    },
+  },
+});
+```
+
+## 自定义单元格渲染器
+
+### 注册渲染器
+
+在适配器中注册：
+
+```typescript
+import { h } from 'vue';
+import { Button, Image } from 'ant-design-vue';
+
+setupVbenVxeTable({
+  configVxeTable: (vxeUI) => {
+    // 图片单元格
+    vxeUI.renderer.add('CellImage', {
+      renderTableDefault(_renderOpts, params) {
+        const { column, row } = params;
+        return h(Image, { src: row[column.field] });
+      },
+    });
+
+    // 链接单元格
+    vxeUI.renderer.add('CellLink', {
+      renderTableDefault(renderOpts) {
+        const { props } = renderOpts;
+        return h(
+          Button,
+          { size: 'small', type: 'link' },
+          { default: () => props?.text },
+        );
+      },
+    });
+  },
+});
+```
+
+### 使用渲染器
+
+```typescript
+columns: [
+  { field: 'avatar', title: '头像', cellRender: { name: 'CellImage' } },
+  { field: 'name', title: '名称', cellRender: { name: 'CellLink', props: { text: '点击查看' } } },
+]
+```
+
+## 搜索表单（formOptions）
+
+### 表单配置
+
+```typescript
+const [Grid] = useVbenVxeGrid({
+  formOptions: {
+    show: true,  // 默认显示搜索表单
+    fieldMappingTime: [
+      ['createTime', ['startTime', 'endTime'], 'YYYY-MM-DD'],
+    ],
+    commonConfig: {
+      componentProps: {
+        class: 'w-full',
+      },
+    },
+    schema: [
+      {
+        fieldName: 'name',
+        label: '名称',
+        component: 'Input',
+      },
+      {
+        fieldName: 'status',
+        label: '状态',
+        component: 'Select',
+        componentProps: {
+          options: [
+            { label: '启用', value: 1 },
+            { label: '禁用', value: 0 },
+          ],
+        },
+      },
+    ],
+    submitOnChange: true,
+  },
+});
+```
+
+### 分隔条配置（separator）
+
+搜索表单和表格之间的分隔条：
+
+```typescript
+const [Grid] = useVbenVxeGrid({
+  separator: false,  // 隐藏分隔条
+  // 或自定义样式
+  // separator: { show: false },
+  // separator: { backgroundColor: 'rgba(100,100,0,0.5)' },
+});
+```
+
+### 搜索表单插槽
+
+所有 `form-` 开头的插槽会转发到搜索表单：
+
+```vue
+<template>
+  <Grid>
+    <template #form-before>搜索前内容</template>
+    <template #form-after>搜索后内容</template>
+  </Grid>
+</template>
+```
 
 ## 常见问题
 

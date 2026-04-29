@@ -207,6 +207,46 @@ const [Drawer, drawerApi] = useVbenDrawer({
 | `drawerApi.lock()` | 锁定（禁用关闭） |
 | `drawerApi.unlock()` | 解锁 |
 | `drawerApi.setData(data)` | 设置数据 |
+| `drawerApi.getData()` | 获取数据 |
+| `drawerApi.setState()` | 动态设置状态 |
+| `drawerApi.useStore()` | 获取响应式状态 |
+
+### 抽屉事件
+
+| 事件 | 说明 |
+|------|------|
+| `onBeforeClose` | 关闭前触发，返回 false/Promise reject 阻止关闭 |
+| `onConfirm` | 确认按钮点击 |
+| `onCancel` | 取消按钮点击 |
+| `onOpenChange(isOpen)` | 打开/关闭状态变化 |
+| `onOpened` | 打开动画播放完毕 |
+| `onClosed` | 关闭动画播放完毕 |
+
+### 抽屉 Props
+
+| 配置 | 说明 |
+|------|------|
+| `placement` | 弹出位置：`'left'\|'right'\|'top'\|'bottom'` |
+| `closeIconPlacement` | 关闭按钮位置：`'left'\|'right'` |
+| `loading` | 加载状态 |
+| `titleTooltip` | 标题提示信息 |
+| `description` | 描述信息 |
+| `modal` | 显示遮罩 |
+| `header` | 显示 header |
+| `footer` | 显示 footer |
+| `closable` | 显示关闭按钮 |
+| `confirmDisabled` | 禁用确认按钮 |
+
+### 抽屉插槽
+
+| 插槽名 | 说明 |
+|--------|------|
+| `default` | 抽屉内容 |
+| `prepend-footer` | 取消按钮左侧 |
+| `center-footer` | 取消和确认按钮之间 |
+| `append-footer` | 确认按钮右侧 |
+| `close-icon` | 关闭按钮图标 |
+| `extra` | 标题右侧额外内容 |
 
 ## useVbenModal
 
@@ -269,6 +309,46 @@ const [Modal, modalApi] = useVbenModal({
 | `modalApi.unlock()` | 解锁 |
 | `modalApi.setData(data)` | 设置数据 |
 | `modalApi.getData()` | 获取数据 |
+| `modalApi.setState()` | 动态设置状态 |
+| `modalApi.useStore()` | 获取响应式状态 |
+
+### 弹窗事件
+
+| 事件 | 说明 |
+|------|------|
+| `onBeforeClose` | 关闭前触发，返回 false/Promise reject 阻止关闭 |
+| `onConfirm` | 确认按钮点击 |
+| `onCancel` | 取消按钮点击 |
+| `onOpenChange(isOpen)` | 打开/关闭状态变化 |
+| `onOpened` | 打开动画播放完毕 |
+| `onClosed` | 关闭动画播放完毕 |
+
+### 弹窗 Props
+
+| 配置 | 说明 |
+|------|------|
+| `loading` | 加载状态 |
+| `fullscreen` | 全屏显示 |
+| `fullscreenButton` | 显示全屏按钮 |
+| `draggable` | 可拖拽 |
+| `centered` | 居中显示 |
+| `modal` | 显示遮罩 |
+| `header` | 显示 header |
+| `footer` | 显示 footer |
+| `closable` | 显示关闭按钮 |
+| `confirmDisabled` | 禁用确认按钮 |
+| `confirmLoading` | 确认按钮 loading |
+| `closeOnClickModal` | 点击遮罩关闭 |
+| `closeOnPressEscape` | ESC 关闭 |
+| `titleTooltip` | 标题提示信息 |
+| `description` | 描述信息 |
+| `zIndex` | ZIndex 层级 |
+| `overlayBlur` | 遮罩模糊度 |
+| `bordered` | 显示 border |
+| `contentClass` | 内容区域 class |
+| `footerClass` | 底部区域 class |
+| `headerClass` | 顶部区域 class |
+| `submitting` | 标记提交中，锁定状态 |
 
 ## connectedComponent 模式
 
@@ -278,6 +358,129 @@ const [Modal, modalApi] = useVbenModal({
 |------|------|
 | **父组件** | 调用 `useVbenDrawer/Modal`，管理弹窗状态，通过 `drawerApi.setData()` 传递数据 |
 | **子组件** | 只负责内容展示，通过 `onOpenChange` 获取数据，通过 `emit` 触发事件 |
+
+### connectedComponent 注意事项
+
+- 存在 2 个 `useVbenModal/Drawer` 时，**内部（未设置 connectedComponent）为准**
+- 内外同时设置 `onConfirm` 时，以内部为准
+- `onOpenChange` 内外都会触发
+- 设置 `destroyOnClose` 时，关闭后会完全销毁内部组件
+
+## 锁定状态（lock/unlock）
+
+用于防止重复提交和意外关闭：
+
+```typescript
+const [Modal, modalApi] = useVbenModal({
+  onConfirm: async () => {
+    // 锁定弹窗状态
+    modalApi.lock();
+    
+    try {
+      const values = await formApi.getValues();
+      await saveData(values);
+      modalApi.close();
+    } finally {
+      // 无论成功失败都要解锁
+      modalApi.unlock();
+    }
+  },
+});
+```
+
+### 锁定时的行为
+
+| 状态 | 行为 |
+|------|------|
+| 确认按钮 | 显示 loading |
+| 取消/关闭按钮 | 禁用 |
+| ESC 键 | 禁用 |
+| 点击遮罩 | 禁用 |
+| 内容区域 | 显示 spinner 遮罩 |
+
+### 关闭前回调（onBeforeClose）
+
+```typescript
+const [Modal, modalApi] = useVbenModal({
+  onBeforeClose: async () => {
+    // 询问是否确认关闭
+    const confirmed = await confirm('确定要关闭吗？');
+    return confirmed;
+  },
+  // 支持 Promise
+  onBeforeClose: () => {
+    return new Promise((resolve) => {
+      // 异步确认
+      resolve(true);
+    });
+  },
+});
+```
+
+## 动画类型（animationType）
+
+控制弹窗的动画效果：
+
+```typescript
+const [Modal, modalApi] = useVbenModal({
+  animationType: 'slide',  // 从上往下（默认）
+  // animationType: 'scale', // 缩放淡入淡出
+});
+```
+
+## 挂载位置（appendToMain）
+
+默认弹窗挂载到 body，可设置为内容区域：
+
+```typescript
+const [Modal, modalApi] = useVbenModal({
+  appendToMain: true,  // 挂载到内容区域，标签栏/菜单不会被遮挡
+});
+```
+
+::: tip 配合 Page 组件使用
+
+挂载到内容区域时，Page 组件需要设置 `auto-content-height` 属性：
+
+```vue
+<Page auto-content-height>
+  <Modal appendToMain />
+</Page>
+```
+
+:::
+
+## 默认属性设置
+
+在 `apps/<app>/src/bootstrap.ts` 中设置默认属性：
+
+```typescript
+// 设置默认 Modal 属性
+setDefaultModalProps({
+  fullscreenButton: false,  // 默认隐藏全屏按钮
+  zIndex: 1000,
+});
+
+// 设置默认 Drawer 属性
+setDefaultDrawerProps({
+  zIndex: 1000,
+});
+```
+
+## 插槽（Slots）
+
+| 插槽名 | 说明 |
+|--------|------|
+| `default` | 弹窗内容 |
+| `prepend-footer` | 取消按钮左侧 |
+| `center-footer` | 取消和确认按钮之间 |
+| `append-footer` | 确认按钮右侧 |
+
+## 参数优先级
+
+`slot` > `props` > `state`（useVbenModal 参数）
+
+如果在模板中传入了 slot 或 props，`setState` 不会生效。
 
 ## Playground 示例
 
