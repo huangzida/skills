@@ -1042,6 +1042,18 @@
         "references/llms-semantic.md": "sha256:d85e4a42e80b51e8954d2fe7a1b5d7abeb273fd3a4da3a4ce330ccf3f05a8842"
       }
     },
+    "api-and-interface-design": {
+      "source": "github.com/addyosmani/agent-skills/skills/api-and-interface-design",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.453865843+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/api-and-interface-design",
+      "version": "19e49a0",
+      "tree_hash": "79410f2b6928b5ecb760e34e4c58c68de71f7fd8",
+      "file_hashes": {
+        "SKILL.md": "sha256:293db2903b41316a5109a1e0ce3e1740eeafae31735bc1f9143dafbfd1187363"
+      }
+    },
     "brainstorming": {
       "source": "https://github.com/obra/superpowers/skills/brainstorming",
       "type": "github-subdir",
@@ -1249,6 +1261,18 @@
         "SKILL.md": "sha256:9ef09065f26b9781275b5a4775e14870e331fab833efb2a2aa33f3205a2b83c3"
       }
     },
+    "ci-cd-and-automation": {
+      "source": "github.com/addyosmani/agent-skills/skills/ci-cd-and-automation",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.497826153+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/ci-cd-and-automation",
+      "version": "19e49a0",
+      "tree_hash": "34db321777a17e268ac425f0f7f2501dda55c955",
+      "file_hashes": {
+        "SKILL.md": "sha256:a6ed8ed56456b01ff8314c44eefc69897d9905ae4e06bb2b7036286efb79b5f0"
+      }
+    },
     "claude-api": {
       "source": "https://github.com/anthropics/skills/skills/claude-api",
       "type": "github-subdir",
@@ -1301,6 +1325,30 @@
         "typescript/managed-agents/README.md": "sha256:bf7184e496d84d166ef2ba205a5e29ad6cc673ae03b0893219d125ab2c52ce23"
       }
     },
+    "code-review-and-quality": {
+      "source": "github.com/addyosmani/agent-skills/skills/code-review-and-quality",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.529199987+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/code-review-and-quality",
+      "version": "19e49a0",
+      "tree_hash": "e1edec4a273dbc65b6f3d2d6e56858783047b705",
+      "file_hashes": {
+        "SKILL.md": "sha256:7587de5eff9eccd098f0d3b57b6d86ee18df680a7bbbef03710de7c1a4e67263"
+      }
+    },
+    "code-simplification": {
+      "source": "github.com/addyosmani/agent-skills/skills/code-simplification",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.559637079+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/code-simplification",
+      "version": "19e49a0",
+      "tree_hash": "15b6e21924188ee46402a8c91963162fd9056c7d",
+      "file_hashes": {
+        "SKILL.md": "sha256:f0c5ed754057eb0c1e027e2587f59de816651feb5e837242296c43ea21cf621d"
+      }
+    },
     "compress": {
       "source": "github.com/JuliusBrussee/caveman/plugins/caveman/skills/compress",
       "type": "github-subdir",
@@ -1318,6 +1366,42 @@
         "scripts/compress.py": "sha256:284c78340cd30d5a4844e0e3ce5acbb559f9ba438f50bca919471fa85b409c24",
         "scripts/detect.py": "sha256:c57e92a43e0ce6e740c9e836d07fe46e70ed00b3d8bd5e9124f78cbb156274bd",
         "scripts/validate.py": "sha256:a42e60345ec4033bd71ce76e2fba7395b14d18b623657d5434b0f49443003d75"
+      }
+    },
+    "context-engineering": {
+      "source": "github.com/addyosmani/agent-skills/skills/context-engineering",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.588126713+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/context-engineering",
+      "version": "19e49a0",
+      "tree_hash": "453c3e8d973ddb10402b7c4e6b0d7fce295a43a8",
+      "file_hashes": {
+        "SKILL.md": "sha256:ff9d4e5706bdd2eb7de1bfed569f1f42d28e478979ce6fcc32e617e7861b491d"
+      }
+    },
+    "debugging-and-error-recovery": {
+      "source": "github.com/addyosmani/agent-skills/skills/debugging-and-error-recovery",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.616219522+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/debugging-and-error-recovery",
+      "version": "19e49a0",
+      "tree_hash": "d7f832d654e1a16755dcece28bf53a112dbcf0ce",
+      "file_hashes": {
+        "SKILL.md": "sha256:2539c0078466755c192123c34758aa432da5d29529340037113eeaecb6647b0e"
+      }
+    },
+    "deprecation-and-migration": {
+      "source": "github.com/addyosmani/agent-skills/skills/deprecation-and-migration",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.643975181+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/deprecation-and-migration",
+      "version": "19e49a0",
+      "tree_hash": "d80eaf65b255911ece940e91f9aa6008240fd2bb",
+      "file_hashes": {
+        "SKILL.md": "sha256:bf2d9b4e3bc635b32e8de70b0ab41e4395d7b585e6474347c53ce89d45fbdb75"
       }
     },
     "design-md": {
@@ -1356,6 +1440,18 @@
       "tree_hash": "d9df960e61fe2bafe9183e37de6f9f6b73b74087",
       "file_hashes": {
         "SKILL.md": "sha256:2e47d78846faeea4a56e9809c52700087a15a2155a3f293a3efbaded81398ef4"
+      }
+    },
+    "documentation-and-adrs": {
+      "source": "github.com/addyosmani/agent-skills/skills/documentation-and-adrs",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.670819948+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/documentation-and-adrs",
+      "version": "19e49a0",
+      "tree_hash": "df79e5ccc01e5169e61ec0c98196d171617b4458",
+      "file_hashes": {
+        "SKILL.md": "sha256:7fed35f9c5b95d8e3623ad24d78d209c3267ab62d7157fc03954c76a7e58adf4"
       }
     },
     "docx": {
@@ -1467,6 +1563,58 @@
         "SKILL.md": "sha256:b81e2ff87ed8fa4d6c377ccb127a7254c9e6a77e3ae94f21e6b514f7bb2945a0"
       }
     },
+    "frontend-ui-engineering": {
+      "source": "github.com/addyosmani/agent-skills/skills/frontend-ui-engineering",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.698879665+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/frontend-ui-engineering",
+      "version": "19e49a0",
+      "tree_hash": "7c86ee1c42a9bbe3ef80c774a4bd5a49668513fb",
+      "file_hashes": {
+        "SKILL.md": "sha256:9f9e5b3141c891d866c2a15a11ac3aba4e86ec6c530d054f0534503c2e720cb1"
+      }
+    },
+    "git-workflow-and-versioning": {
+      "source": "github.com/addyosmani/agent-skills/skills/git-workflow-and-versioning",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.726763199+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/git-workflow-and-versioning",
+      "version": "19e49a0",
+      "tree_hash": "c705111c81c8da2e62d836f9e22d8a7d39a2c9de",
+      "file_hashes": {
+        "SKILL.md": "sha256:b1a84eac7a47f6e2985a27733137d862fcdeb552eefe2bd17629e1f3c20e0e97"
+      }
+    },
+    "idea-refine": {
+      "source": "github.com/addyosmani/agent-skills/skills/idea-refine",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.776580459+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/idea-refine",
+      "version": "19e49a0",
+      "tree_hash": "ed6434c55186c0f4fe976d40f8a9380b336459c8",
+      "file_hashes": {
+        "SKILL.md": "sha256:82cd83f2bd16c0fb527e6e4414e21db5334ceee3b823119e3f049c7f67d7ec23",
+        "examples.md": "sha256:563204bfbf2f80a444151695205af4cb759e722b3d1e5460e08f278a69c89ba1",
+        "frameworks.md": "sha256:161ebc18fdf2d996bc62a87a2d747cf1bf53548354f8925de25c732c27f00309",
+        "refinement-criteria.md": "sha256:1ca2973a4d01b5cb37ab7ddb2eff77fa4e792634a33d0ce44961c068fc88d51a",
+        "scripts/idea-refine.sh": "sha256:f02a52408a4218047c032d221483abfbb48d11f090bb4915965c7419bf2e0e47"
+      }
+    },
+    "incremental-implementation": {
+      "source": "github.com/addyosmani/agent-skills/skills/incremental-implementation",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.802030701+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/incremental-implementation",
+      "version": "19e49a0",
+      "tree_hash": "ad0fb55d493cf7aa7e89f3637abb10e345a07218",
+      "file_hashes": {
+        "SKILL.md": "sha256:7ec8f20fb9b9b44370aea0cb1f4a1bf260f320e5f4f157017e87e0d4b311a15f"
+      }
+    },
     "internal-comms": {
       "source": "https://github.com/anthropics/skills/skills/internal-comms",
       "type": "github-subdir",
@@ -1576,6 +1724,30 @@
         "scripts/fill_pdf_form_with_annotations.py": "sha256:8a56e063a49ed53c0b0e1d312ecf8023af76816ed139486ec3b539873de202fd"
       }
     },
+    "performance-optimization": {
+      "source": "github.com/addyosmani/agent-skills/skills/performance-optimization",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.848741102+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/performance-optimization",
+      "version": "19e49a0",
+      "tree_hash": "f904d17bd259a81493209cfc3f3c00cafd321b3a",
+      "file_hashes": {
+        "SKILL.md": "sha256:46ebf029d5fe812c312d4c5388ba7f07a076685fd30c7dfa7539c07763f1304e"
+      }
+    },
+    "planning-and-task-breakdown": {
+      "source": "github.com/addyosmani/agent-skills/skills/planning-and-task-breakdown",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.875206003+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/planning-and-task-breakdown",
+      "version": "19e49a0",
+      "tree_hash": "7122f9fa302c8e879fe7bd4e8ca401ffb7b2aec7",
+      "file_hashes": {
+        "SKILL.md": "sha256:d9dc9a1bea50a0bb2b5c51ed59833b65969b5b0bda2c8dacefb5560275443a35"
+      }
+    },
     "pptx": {
       "source": "https://github.com/anthropics/skills/skills/pptx",
       "type": "github-subdir",
@@ -1683,6 +1855,30 @@
         "code-reviewer.md": "sha256:7f5328dca12cb200005ae9d4386f63a9b0acb735ece57f82db206b4a3189ccae"
       }
     },
+    "security-and-hardening": {
+      "source": "github.com/addyosmani/agent-skills/skills/security-and-hardening",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.904056712+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/security-and-hardening",
+      "version": "19e49a0",
+      "tree_hash": "f8b6967599b2101d651fbe6a5377ab3f8c74470c",
+      "file_hashes": {
+        "SKILL.md": "sha256:d13c91c5aa27dbd95c25a83aa5a3290294d9068852dec3b2918b167f1f09e5d6"
+      }
+    },
+    "shipping-and-launch": {
+      "source": "github.com/addyosmani/agent-skills/skills/shipping-and-launch",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.931376221+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/shipping-and-launch",
+      "version": "19e49a0",
+      "tree_hash": "5fdf87bd28e41a9ed3cf82be0e86e249e6a117e0",
+      "file_hashes": {
+        "SKILL.md": "sha256:3e54575e5dcdc8f576cd1735aa804a56bb881c342bd6c702fd86531bd6652d56"
+      }
+    },
     "skill-creator": {
       "source": "https://github.com/anthropics/skills/skills/skill-creator",
       "type": "github-subdir",
@@ -1764,6 +1960,30 @@
       "tree_hash": "1b5943432ddd1b980206968c529a323cc992dbec",
       "file_hashes": {
         "SKILL.md": "sha256:e1e32f5e2d420872c6c7332b53d5ff7721946766b78c4822b424c2d512c8fdbc"
+      }
+    },
+    "source-driven-development": {
+      "source": "github.com/addyosmani/agent-skills/skills/source-driven-development",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.956691529+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/source-driven-development",
+      "version": "19e49a0",
+      "tree_hash": "f935ca8f7220760d619a02b55948ad534f4078b5",
+      "file_hashes": {
+        "SKILL.md": "sha256:b979e7531ea601ed14a090f32a5b135db517c48ab9821c5e8b09efd80f4ff4d8"
+      }
+    },
+    "spec-driven-development": {
+      "source": "github.com/addyosmani/agent-skills/skills/spec-driven-development",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:08.982300538+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/spec-driven-development",
+      "version": "19e49a0",
+      "tree_hash": "f7a7b044850057a693b72298317dd886d38a7c6b",
+      "file_hashes": {
+        "SKILL.md": "sha256:6d098845420d0f7bbdedfcb8a80bee391b4e9aff58a8195638b35a7bfd7b9b59"
       }
     },
     "subagent-driven-development": {
@@ -1993,6 +2213,18 @@
       "version": "70444e5",
       "file_hashes": {
         "SKILL.md": "sha256:c142f64de35a7c7518e62d4a5c5b18800bbe4391be14ba45a5d049adfcf01c57"
+      }
+    },
+    "using-agent-skills": {
+      "source": "github.com/addyosmani/agent-skills/skills/using-agent-skills",
+      "type": "github-subdir",
+      "installed_at": "2026-04-29T09:25:09.008862789+08:00",
+      "repo_url": "https://github.com/addyosmani/agent-skills.git",
+      "subdir": "skills/using-agent-skills",
+      "version": "19e49a0",
+      "tree_hash": "6fcb7486f14783fdbafd9bfdccd07af372eb74ef",
+      "file_hashes": {
+        "SKILL.md": "sha256:7bd7da5999acd2d4c4fbe59cda7483a96fa6f2fe852ff32bc4f97b649b444b31"
       }
     },
     "using-git-worktrees": {
