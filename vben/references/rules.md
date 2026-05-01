@@ -157,3 +157,26 @@ const hasData = data && Object.keys(data).length > 0;
 ## 🚨 8. 禁止添加代码注释
 
 > **除非用户明确要求，否则不要添加任何代码注释。**
+
+---
+
+## 🚨 9. `useVbenVxeGrid` 的 `gridOptions.height` 禁止设置为 `'auto'`
+
+> **默认创建时不设置 height 属性，让表格自动适应容器高度。**
+
+| 场景 | ❌ 禁止使用 | ✅ 正确使用 |
+|------|------------|-----------|
+| 表格高度 | `height: 'auto'` | 不设置 height 属性（默认自适应） |
+| 固定高度 | `height: 500` | `height: 'auto'` + 外层容器固定高度 |
+
+```typescript
+// ❌ 错误：height: 'auto' 会导致布局问题
+gridOptions: {
+  height: 'auto',
+}
+
+// ✅ 正确：不设置 height，让表格自适应
+gridOptions: {
+  // height 属性不设置
+}
+```
