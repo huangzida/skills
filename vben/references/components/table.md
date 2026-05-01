@@ -19,7 +19,6 @@ const [Grid] = useVbenVxeGrid({
       { field: 'name', title: '姓名', sortable: true },
     ],
     data: [],
-    height: 'auto',
     rowConfig: { keyField: 'id' },
   },
 });
@@ -288,7 +287,6 @@ const [Grid] = useVbenVxeGrid({
 ```typescript
 const [Grid] = useVbenVxeGrid({
   gridOptions: {
-    height: 'auto',                   // 表格高度
     showOverflow: true,               // 单元格内容溢出显示...
     border: true,                     // 显示边框
     round: true,                      // 圆角

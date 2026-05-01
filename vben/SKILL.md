@@ -46,6 +46,81 @@ import { VbenButton } from '@vben/common-ui';
 </script>
 ```
 
+### 🚨 TypeScript 类型规范
+
+> **禁止使用非空断言 `!`，必须使用空值合并 `??` 或可选链 `?.`**
+
+| 场景 | ❌ 禁止使用 | ✅ 正确使用 |
+|------|------------|-----------|
+| 访问可能为 undefined 的属性 | `data.triggerConditions!` | `data.triggerConditions ?? []` |
+| 访问可能为 null 的值 | `value!.toString()` | `value?.toString() ?? ''` |
+
+**违规示例：**
+```typescript
+// ❌ 错误：非空断言
+const conditions = data.triggerConditions!.length > 0
+  ? data.triggerConditions!
+  : defaultConditions;
+```
+
+**正确示例：**
+```typescript
+// ✅ 正确：空值合并 + 可选链
+const conditions = (data.triggerConditions?.length ?? 0) > 0
+  ? data.triggerConditions ?? []
+  : defaultConditions;
+```
+
+### 📋 弹窗标题最佳实践
+
+> **共用 Create/Edit 弹窗时，必须使用 `computed` 动态计算标题！**
+
+当一个弹窗组件同时支持新增和编辑时，标题需要根据当前模式动态切换。正确做法：
+
+```typescript
+const modalData = ref<T | null>(null);
+const isEdit = computed(() => !!modalData.value);
+const modalTitle = computed(() =>
+  isEdit.value ? $t('xxx.editTitle') : $t('xxx.createTitle'),
+);
+
+const [Modal, modalApi] = useVbenModal({
+  // ⚠️ 不要在这里设置固定 title
+});
+
+function open(data?: T) {
+  if (data) {
+    modalData.value = data;
+    modalApi.setData(data);
+  } else {
+    modalData.value = null;
+    modalApi.setData(null);  // 注意：会设置空对象 {}
+  }
+  modalApi.open();
+}
+```
+
+**模板中使用 `:title` 绑定：**
+```vue
+<template>
+  <Modal :title="modalTitle">
+    <!-- ... -->
+  </Modal>
+</template>
+```
+
+**⚠️ 关键注意事项：`modalApi.getData()` 返回空对象 `{}` 而非 `undefined`**
+
+在 `onOpenChange` 中判断数据是否存在时：
+```typescript
+// ❌ 错误：空对象 {} 是 truthy
+if (data) { ... }
+
+// ✅ 正确：检查对象是否有属性
+const hasData = data && Object.keys(data).length > 0;
+if (hasData) { ... }
+```
+
 ### 📋 CRUD 模块标准结构
 
 ```
@@ -86,7 +161,7 @@ const [Modal, modalApi] = useVbenModal({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) return;
-    
+
     modalApi.lock();
     try {
       const values = await formApi.getValues();
