@@ -9,185 +9,10 @@ description: Use when developing or maintaining vben-admin 5.0 projects, creatin
 
 ## ⚠️ 强制开发规范
 
-### 🚨 必须使用 vben 官方组件
-
-> **严禁自己实现 Table 和 Modal！vben-admin 提供了完整的适配层，必须使用！**
-
-| 功能 | ❌ 禁止使用 | ✅ 必须使用 |
-|------|------------|-----------|
-| 表格 | `antdv-next Table`、`html table` | `useVbenVxeGrid` from `#/adapter/vxe-table` |
-| 弹窗 | `antdv-next Modal`、`antdv-next Drawer` | `useVbenModal` from `@vben/common-ui` |
-| 表单 | 原生 Input/Select 拼装 | `useVbenForm` from `#/adapter/form` |
-| 按钮 | `antdv-next Button`、原生 button | `VbenButton` from `@vben/common-ui` |
-
-**违规示例：**
-```vue
-<!-- ❌ 错误：使用 antdv-next 的 Table 和 Modal -->
-<template>
-  <Table :columns="columns" :data-source="data" />
-  <Button @click="openModal">打开</Button>
-</template>
-
-<!-- ❌ 错误：使用原生表单组件 -->
-<template>
-  <Input v-model="form.name" />
-  <Select v-model="form.status" />
-</template>
-```
-
-**正确示例：**
-```vue
-<!-- ✅ 正确：使用 vben 官方适配层 -->
-<script setup lang="ts">
-import { useVbenVxeGrid } from '#/adapter/vxe-table';
-import { useVbenForm } from '#/adapter/form';
-import { useVbenModal } from '@vben/common-ui';
-import { VbenButton } from '@vben/common-ui';
-</script>
-```
-
-### 🚨 TypeScript 类型规范
-
-> **禁止使用非空断言 `!`，必须使用空值合并 `??` 或可选链 `?.`**
-
-| 场景 | ❌ 禁止使用 | ✅ 正确使用 |
-|------|------------|-----------|
-| 访问可能为 undefined 的属性 | `data.triggerConditions!` | `data.triggerConditions ?? []` |
-| 访问可能为 null 的值 | `value!.toString()` | `value?.toString() ?? ''` |
-
-**违规示例：**
-```typescript
-// ❌ 错误：非空断言
-const conditions = data.triggerConditions!.length > 0
-  ? data.triggerConditions!
-  : defaultConditions;
-```
-
-**正确示例：**
-```typescript
-// ✅ 正确：空值合并 + 可选链
-const conditions = (data.triggerConditions?.length ?? 0) > 0
-  ? data.triggerConditions ?? []
-  : defaultConditions;
-```
-
-### 📋 弹窗标题最佳实践
-
-> **共用 Create/Edit 弹窗时，必须使用 `computed` 动态计算标题！**
-
-当一个弹窗组件同时支持新增和编辑时，标题需要根据当前模式动态切换。正确做法：
-
-```typescript
-const modalData = ref<T | null>(null);
-const isEdit = computed(() => !!modalData.value);
-const modalTitle = computed(() =>
-  isEdit.value ? $t('xxx.editTitle') : $t('xxx.createTitle'),
-);
-
-const [Modal, modalApi] = useVbenModal({
-  // ⚠️ 不要在这里设置固定 title
-});
-
-function open(data?: T) {
-  if (data) {
-    modalData.value = data;
-    modalApi.setData(data);
-  } else {
-    modalData.value = null;
-    modalApi.setData(null);  // 注意：会设置空对象 {}
-  }
-  modalApi.open();
-}
-```
-
-**模板中使用 `:title` 绑定：**
-```vue
-<template>
-  <Modal :title="modalTitle">
-    <!-- ... -->
-  </Modal>
-</template>
-```
-
-**⚠️ 关键注意事项：`modalApi.getData()` 返回空对象 `{}` 而非 `undefined`**
-
-在 `onOpenChange` 中判断数据是否存在时：
-```typescript
-// ❌ 错误：空对象 {} 是 truthy
-if (data) { ... }
-
-// ✅ 正确：检查对象是否有属性
-const hasData = data && Object.keys(data).length > 0;
-if (hasData) { ... }
-```
-
-### 📋 CRUD 模块标准结构
-
-```
-views/
-├── your-feature/
-│   ├── index.vue           # 主页面（useVbenVxeGrid）
-│   ├── data.ts            # 列定义（useColumns）
-│   ├── mock.ts            # 模拟数据（可选）
-│   └── components/
-│       ├── CreateModal.vue    # 创建弹窗（useVbenForm + useVbenModal）
-│       ├── EditModal.vue      # 编辑弹窗（useVbenForm + useVbenModal）
-│       └── DetailDrawer.vue   # 详情抽屉（useVbenForm + useVbenDrawer）
-```
-
-### 📋 弹窗表单标准结构
-
-```vue
-<!-- components/CreateModal.vue -->
-<script setup lang="ts">
-import type { VbenFormSchema } from '#/adapter/form';
-import { useVbenModal } from '@vben/common-ui';
-import { useVbenForm, z } from '#/adapter/form';
-
-const emit = defineEmits<{ submit: [payload: any] }>();
-
-const schema: VbenFormSchema[] = [
-  { fieldName: 'name', label: '名称', component: 'Input', rules: z.string().min(1, '请输入') },
-  // ... 更多字段
-];
-
-const [Form, formApi] = useVbenForm({
-  layout: 'vertical',
-  schema,
-  showDefaultActions: false,
-});
-
-const [Modal, modalApi] = useVbenModal({
-  async onConfirm() {
-    const { valid } = await formApi.validate();
-    if (!valid) return;
-
-    modalApi.lock();
-    try {
-      const values = await formApi.getValues();
-      emit('submit', values);
-      modalApi.close();
-    } finally {
-      modalApi.lock(false);
-    }
-  },
-  onOpenChange(isOpen) {
-    if (isOpen) formApi.resetForm();
-  },
-  title: '创建',
-});
-
-defineExpose({
-  open: () => modalApi.open(),
-});
-</script>
-
-<template>
-  <Modal>
-    <Form class="mx-4" />
-  </Modal>
-</template>
-```
+> **🔴 在开始任何开发任务之前，必须先阅读 [强制开发规范](references/rules.md)！**
+>
+> 该文件包含所有必须遵守的硬性规则，违反将导致 lint 错误或运行时异常。
+> 包括：组件使用、类型规范、图标规范、深拷贝、样式规范、弹窗规范等。
 
 ---
 
@@ -216,7 +41,7 @@ defineExpose({
 | 主题 | 文件 |
 |------|------|
 | [快速开始](references/guides/quick-start.md) | 环境准备、启动项目、创建页面 |
-| [项目结构](references/guides/project-structure.md) | Monorepo 结构、路径别名 |
+| [项目结构](references/guides/quick-start.md) | Monorepo 结构、路径别名 |
 | [Playground 示例](references/guides/playground-index.md) | 表单、表格、弹窗示例索引 |
 | [组件拆分](references/guides/component-splitting.md) | 仪表板/卡片等组件拆分最佳实践 |
 
@@ -289,9 +114,10 @@ vben/
 ├── SKILL.md                    # 主入口
 ├── README.md                   # 快速入门
 ├── references/
+│   ├── rules.md                # ⚠️ 强制开发规范（必读）
 │   ├── components/             # 组件文档
 │   ├── core/                   # 核心功能
 │   ├── features/              # 配置定制
 │   └── guides/                 # 开发指南
-│       └── component-splitting.md  # 组件拆分最佳实践
+│       └── component-splitting.md
 ```
