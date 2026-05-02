@@ -137,19 +137,64 @@ Promise.reject(new Error('reason'));
 
 ---
 
-## 🚨 7. 弹窗标题必须使用 computed 动态计算
+## 🚨 7. 弹窗标题必须使用 computed 动态计算 + connectedComponent 模式
 
-> **共用 Create/Edit 弹窗时，禁止硬编码 title！**
+> **共用 Create/Edit 弹窗时，禁止硬编码 title！禁止使用 defineExpose + ref 调用！**
+
+### 子组件：computed + `:title` 绑定
 
 ```typescript
-const modalData = ref<T | null>(null);
-const isEdit = computed(() => !!modalData.value);
-const modalTitle = computed(() =>
-  isEdit.value ? $t('xxx.editTitle') : $t('xxx.createTitle'),
+const modalData = ref<T>();
+const getTitle = computed(() =>
+  modalData.value?.id ? $t('xxx.editTitle') : $t('xxx.createTitle'),
 );
 
-// ⚠️ modalApi.getData() 返回空对象 {} 而非 undefined
-const hasData = data && Object.keys(data).length > 0;
+const [Modal, modalApi] = useVbenModal({
+  onOpenChange(isOpen) {
+    if (isOpen) {
+      const data = modalApi.getData<T>();
+      if (data?.id) {
+        modalData.value = data;
+        formApi.setValues(data);
+      } else {
+        modalData.value = undefined;
+        formApi.resetForm();
+      }
+    }
+  },
+});
+```
+
+```vue
+<template>
+  <Modal :title="getTitle">
+    <Form />
+  </Modal>
+</template>
+```
+
+### 父组件：connectedComponent 模式
+
+```typescript
+const [FormModal, formModalApi] = useVbenModal({
+  connectedComponent: FormModalContent,
+  destroyOnClose: true,
+});
+
+formModalApi.setData(null).open();   // 新增
+formModalApi.setData(row).open();    // 编辑
+```
+
+### ⚠️ 注意：判断编辑模式必须用 `data?.id`，而非 `!!data`
+
+`modalApi.getData()` 在新增时可能返回空对象 `{}`，`!!data` 为 `true` 会导致误判为编辑模式。
+
+```typescript
+// ❌ 错误：空对象 {} 会误判为编辑
+if (data) { ... }
+
+// ✅ 正确：用 id 判断
+if (data?.id) { ... }
 ```
 
 ---

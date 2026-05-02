@@ -446,6 +446,108 @@ const [Modal, modalApi] = useVbenModal({
 
 :::
 
+## 动态标题（新增/编辑切换）
+
+根据弹窗是否携带数据，动态显示「新增」或「编辑」标题。推荐使用 `computed` + 模板 `:title` 绑定。
+
+### ✅ 推荐写法：computed + 模板绑定（子组件）
+
+```typescript
+// modules/form.vue
+const formData = ref<SomeType>();
+const getTitle = computed(() =>
+  formData.value?.id
+    ? $t('ui.actionTitle.edit', [$t('module.name')])
+    : $t('ui.actionTitle.create', [$t('module.name')]),
+);
+
+const [Modal, modalApi] = useVbenModal({
+  onOpenChange(isOpen) {
+    if (isOpen) {
+      const data = modalApi.getData<SomeType>();
+      if (data?.id) {
+        formData.value = data;
+        formApi.setValues(data);
+      } else {
+        formData.value = undefined;
+        formApi.resetForm();
+      }
+    }
+  },
+});
+```
+
+```vue
+<!-- modules/form.vue -->
+<template>
+  <Modal :title="getTitle">
+    <Form />
+  </Modal>
+</template>
+```
+
+### ✅ 父组件调用：connectedComponent 模式
+
+```typescript
+// list.vue
+import Form from './modules/form.vue';
+
+const [FormModal, formModalApi] = useVbenModal({
+  connectedComponent: Form,
+  destroyOnClose: true,
+});
+
+// 新增
+function handleCreate() {
+  formModalApi.setData(null).open();
+}
+
+// 编辑
+function handleEdit(row: RecordType) {
+  formModalApi.setData(row).open();
+}
+```
+
+```vue
+<!-- list.vue -->
+<template>
+  <FormModal @success="handleSuccess" />
+</template>
+```
+
+### ❌ 不推荐：defineExpose + ref 调用
+
+```typescript
+// 子组件暴露 open/close 方法 —— 不必要的复杂度
+defineExpose({ open, close });
+
+// 父组件通过 ref 调用 —— 耦合子组件内部实现
+const modalRef = ref<InstanceType<typeof SomeModal>>();
+modalRef.value?.open(row);
+```
+
+### ❌ 不推荐：modalApi.setState
+
+```typescript
+// 每次 onOpenChange 都要手动调用 setState，容易遗漏
+onOpenChange(isOpen) {
+  if (isOpen) {
+    if (data) {
+      modalApi.setState({ title: '编辑' });
+    } else {
+      modalApi.setState({ title: '新增' });
+    }
+  }
+}
+```
+
+**推荐原因**：
+- `computed` 是响应式的，数据变化标题自动更新，无需手动同步
+- `connectedComponent` 模式通过 `setData` 传数据，无需 `defineExpose`，更解耦
+- 判断 `data?.id` 而非 `!!data`，避免空对象导致误判为编辑模式
+
+**参考示例**：`playground/src/views/system/dept/`
+
 ## 默认属性设置
 
 在 `apps/<app>/src/bootstrap.ts` 中设置默认属性：
