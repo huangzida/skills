@@ -34,6 +34,7 @@ description: Use when developing or maintaining vben-admin 5.0 projects, creatin
 - [ ] 深拷贝用 `structuredClone()`
 - [ ] 图标用 `@vben/icons`
 - [ ] `gridOptions.height` 不设置 `'auto'`
+- [ ] 每个页面独立一个国际化 JSON 文件
 
 ---
 

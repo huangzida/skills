@@ -6,6 +6,20 @@
 
 ## 语言包结构（按路由拆分 + 嵌套组件）
 
+### ⚠️ 强制规范：每个页面独立国际化文件
+
+> **每个页面/功能模块必须创建独立的 JSON 国际化文件，禁止将多个页面的翻译混入同一个文件！**
+
+**注册机制**：`import.meta.glob('./langs/**/*.json')` 自动扫描所有 JSON 文件，无需手动注册。只需在 `langs/zh-CN/` 和 `langs/en-US/` 下创建对应的 JSON 文件即可。
+
+```
+src/locales/langs/zh-CN/
+├── product.json              # 产品管理页 ✅
+├── firmware-management.json  # 固件管理页 ✅
+├── system-management.json    # ❌ 不要把多个子页面的翻译混在一起
+└── ...
+```
+
 ### 目录结构
 
 ```

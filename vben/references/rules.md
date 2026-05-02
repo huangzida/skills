@@ -214,3 +214,32 @@ gridOptions: {
   // height 属性不设置
 }
 ```
+
+---
+
+## 🚨 11. 每个页面必须使用独立的国际化文件
+
+> **每个页面/功能模块必须创建独立的 JSON 国际化文件，禁止将多个页面的翻译混入同一个文件（如 system-management.json）！**
+
+```
+src/locales/langs/zh-CN/
+├── product.json              # 产品管理页
+├── firmware-management.json  # 固件管理页
+├── alarm-channel.json        # 告警渠道页
+└── ...                       # 每页一个文件
+```
+
+**注册机制**：`import.meta.glob('./langs/**/*.json')` 自动扫描，无需手动注册。只需在 `langs/zh-CN/` 和 `langs/en-US/` 下创建对应的 JSON 文件即可。
+
+```json
+// ✅ 正确：firmware-management.json
+{
+  "title": "固件管理",
+  "firmwareName": "固件名称",
+  "uploadFirmware": "上传固件"
+}
+```
+
+```typescript
+// 使用：$t('firmware-management.title')
+```
