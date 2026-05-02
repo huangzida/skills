@@ -7,117 +7,217 @@ description: Use when developing or maintaining vben-admin 5.0 projects, creatin
 
 面向 vben-admin 5.0 项目的高级开发指南，整合官方文档和最佳实践。
 
-## ⚠️ 强制开发规范
+---
 
-> **🔴 在开始任何开发任务之前，必须先阅读 [强制开发规范](references/rules.md)！**
->
-> 该文件包含所有必须遵守的硬性规则，违反将导致 lint 错误或运行时异常。
-> 包括：组件使用、类型规范、图标规范、深拷贝、样式规范、弹窗规范等。
+## 🚀 如何使用本 Skill
+
+**每次开发任务时：**
+1. 先阅读 [强制开发规范](references/rules.md) 的快速检查清单
+2. 根据任务类型查看对应的「功能开发速查表」
+3. 实现时遵循参考文档的最佳实践
+4. 开发完成后运行 `pnpm lint && pnpm check:type`
 
 ---
 
-## 🔧 组件拆分规范
+## ⚠️ 强制开发规范（必读）
 
-> **组件超过 200 行或包含多个功能区块时必须拆分！**
+> **🔴 开发任何任务前，必须先阅读 [强制开发规范](references/rules.md)！**
+>
+> 违反这些规范将导致 lint 错误或运行时异常。
 
-保持组件颗粒度细、易于维护和扩展：
-- 将大组件拆分为多个小组件
-- 每个组件职责单一
-- 相关功能抽离为独立组件
+**快速检查清单：**
+- [ ] 使用 `useVbenVxeGrid`（非 antdv Table）
+- [ ] 使用 `useVbenModal`（非 antdv Modal）
+- [ ] 使用 `useVbenForm`（非原生表单）
+- [ ] 组件 >200行 或 ≥2个功能区块 → 必须拆分
+- [ ] 禁止非空断言 `!`，用 `??` / `?.`
+- [ ] 深拷贝用 `structuredClone()`
+- [ ] 图标用 `@vben/icons`
+- [ ] `gridOptions.height` 不设置 `'auto'`
 
-| 场景 | 拆分方式 |
-|------|----------|
-| 表单 + 弹窗 | 使用 `useVbenForm` + `useVbenModal` |
-| 复杂表单 | 按业务模块拆分为多个子表单 |
-| 编辑详情 | 基本信息 + 物模型 等模块拆分 |
-| 仪表板 | Header + 卡片组 + 图表 + 列表 等区块拆分 |
+---
 
-> 💡 **详细指南：** [组件拆分最佳实践](references/guides/component-splitting.md)
+## 📋 功能开发速查表
 
-## 快速导航
+> **开发时根据任务类型，优先查看对应文档：**
 
-### 🔰 入门
+### 表格开发
+> ⚡ 必查：[表格组件](references/components/table.md)
+```typescript
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+// 关键特性：proxyConfig、pagerConfig、columns、slots
+```
 
-| 主题 | 文件 |
+### 表单开发
+> ⚡ 必查：[表单组件](references/components/form.md)
+```typescript
+import { useVbenForm } from '#/adapter/form';
+// 关键特性：componentProps、valueFormat、fieldMappingTime
+```
+
+### 弹窗/抽屉
+> ⚡ 必查：[弹窗抽屉](references/components/modal-drawer.md)
+```typescript
+import { useVbenModal } from '@vben/common-ui';
+// 关键特性：connectedComponent、appendToMain
+```
+
+### 仪表板/统计卡片
+> ⚡ 必查：[组件拆分](references/guides/component-splitting.md)
+```typescript
+// 仪表板拆分模式：
+// - StatCardList     统计卡片
+// - ChartCard/Chart  图表组件
+// - TableList        数据列表
+// - index.vue        主组件（布局协调）
+```
+
+### ECharts 图表
+> ⚡ 必查：[图表组件](references/components/echarts.md)
+```typescript
+import { EchartsUI, useEcharts } from '@vben/plugins/echarts';
+// 关键特性：useEcharts、renderEcharts
+```
+
+### 文件下载
+> ⚡ 必查：[文件下载](references/features/download.md)
+```typescript
+requestClient.download(url, filename);
+```
+
+### 图标使用
+> ⚡ 必查：[图标使用](references/core/icons.md)
+```typescript
+import { Plus, Settings } from '@vben/icons';
+// ⚠️ 禁止内联 SVG！
+```
+
+### 路由配置
+> ⚡ 必查：[路由配置](references/core/route.md)
+```typescript
+meta: {
+  icon: 'lucide:file-text',
+  title: '页面标题',
+  order: 1,
+}
+```
+
+---
+
+## 📁 完整文档索引
+
+### 核心功能
+
+| 功能 | 文档 | 关键特性 |
+|------|------|----------|
+| [表格](references/components/table.md) | table.md | proxyConfig、pagerConfig、columns |
+| [表单](references/components/form.md) | form.md | componentProps、valueFormat |
+| [弹窗抽屉](references/components/modal-drawer.md) | modal-drawer.md | connectedComponent、appendToMain |
+| [图表](references/components/echarts.md) | echarts.md | useEcharts、renderEcharts |
+| [页面](references/components/page.md) | page.md | Page 组件 |
+| [下拉菜单](references/components/dropdown-popconfirm.md) | dropdown-popconfirm.md | Popconfirm 事件处理 |
+| [数字动画](references/components/count-to-animator.md) | count-to-animator.md | 数字滚动动画 |
+| [路由配置](references/core/route.md) | route.md | children、meta、order |
+| [权限控制](references/core/access.md) | access.md | permission |
+| [API请求](references/core/api.md) | api.md | requestClient |
+| [国际化](references/core/internationalization.md) | internationalization.md | $t |
+| [主题样式](references/core/styling.md) | styling.md | Tailwind、dark mode |
+| [图标使用](references/core/icons.md) | icons.md | @vben/icons |
+| [状态管理](references/core/state-management.md) | state-management.md | Pinia Store |
+| [适配器](references/core/adapter.md) | adapter.md | 自定义组件 |
+| [登录对接](references/core/login.md) | login.md | 登录接口、Token刷新 |
+
+### 功能配置
+
+| 功能 | 文档 |
 |------|------|
-| [快速开始](references/guides/quick-start.md) | 环境准备、启动项目、创建页面 |
-| [项目结构](references/guides/quick-start.md) | Monorepo 结构、路径别名 |
-| [Playground 示例](references/guides/playground-index.md) | 表单、表格、弹窗示例索引 |
-| [组件拆分](references/guides/component-splitting.md) | 仪表板/卡片等组件拆分最佳实践 |
+| [文件下载](references/features/download.md) | requestClient.download() |
+| [偏好设置](references/features/preferences.md) | preferences.ts |
+| [CRUD生成](references/guides/crud-generation.md) | 标准 CRUD 流程 |
 
-### 📦 核心组件
+### 开发指南
 
-| 组件 | 文件 | 特性 |
+| 指南 | 文档 | 说明 |
 |------|------|------|
-| [表单](references/components/form.md) | useVbenForm | valueFormat、fieldMappingTime、dependencies、handleValuesChange |
-| [表格](references/components/table.md) | useVbenVxeGrid | treeConfig、editConfig、virtual scroll、自定义渲染器 |
-| [图表](references/components/echarts.md) | EchartsUI + useEcharts | `dashboard/analytics/` |
-| [弹窗/抽屉](references/components/modal-drawer.md) | useVbenModal/Drawer | lock/unlock、connectedComponent、appendToMain |
-| [页面](references/components/page.md) | Page | `examples/page/` |
-| [自定义组件](references/core/adapter.md) | InputNumberRange / IpInput / MacInput / TreeSelectWithCustomInput / Popconfirm / ApiComponent | `#/adapter/component` | ApiComponent 远程数据、beforeFetch/afterFetch、autoSelect |
+| [组件拆分](references/guides/component-splitting.md) | component-splitting.md | ⚠️ 强制规范 |
+| [快速开始](references/guides/quick-start.md) | quick-start.md | 环境、项目结构 |
+| [Playground](references/guides/playground-index.md) | playground-index.md | 示例索引 |
+| [构建部署](references/guides/build-deploy.md) | build-deploy.md | 构建命令 |
+| [项目结构](references/guides/project-structure.md) | project-structure.md | 目录规范 |
 
-### 🏗️ 核心功能
+---
 
-| 功能 | 文件 |
-|------|------|
-| [路由配置](references/core/route.md) | 路由定义、元信息、动态路由 |
-| [权限控制](references/core/access.md) | 前端/后端模式、组件级权限 |
-| [API请求](references/core/api.md) | 请求封装、拦截器 |
-| [国际化](references/core/internationalization.md) | 语言包、切换语言 |
-| [状态管理](references/core/state-management.md) | Store、Auth Store |
-| [主题配置](references/core/theme.md) | 内置主题、自定义主题 |
-| [样式设计](references/core/styling.md) | Tailwind 主题类、深色模式、语义颜色 |
-| [图标使用](references/core/icons.md) | Iconify、常用图标集 |
-| [登录对接](references/core/login.md) | 登录接口、Token刷新 |
-| [适配器](references/core/adapter.md) | 组件适配、自定义注册 |
+## 🔧 开发流程
 
-### ⚙️ 配置与定制
+```
+1. 任务分析 → 确定功能模块类型（表格/表单/仪表板/图表）
+2. 规范检查 → 阅读 references/rules.md 强制规范
+3. 组件选择 → 根据「功能开发速查表」查看对应文档
+4. 组件拆分 → 仪表板/复杂组件参考 component-splitting.md
+5. 实现开发 → 遵循组件文档的最佳实践
+6. 验证检查 → pnpm lint && pnpm check:type
+```
 
-| 主题 | 文件 |
-|------|------|
-| [偏好设置](references/features/preferences.md) | preferences.ts 完整配置 |
-| [CRUD生成](references/guides/crud-generation.md) | 标准CRUD开发流程 |
-| [构建部署](references/guides/build-deploy.md) | 构建命令、部署配置 |
+---
 
-### 🎯 最佳实践
-
-| 主题 | 文件 | 说明 |
-|------|------|------|
-| [文件下载](references/features/download.md) | requestClient.download() | 绕过响应拦截器 |
-| [Dropdown/Popconfirm](references/components/dropdown-popconfirm.md) | 事件处理规则 | 避免重复触发 |
-
-## 常用命令
+## 📝 常用命令
 
 ```bash
 # 开发
 pnpm dev:playground   # Playground（推荐）
 
 # 检查
+pnpm lint             # Lint 检查
 pnpm check:type       # 类型检查
-pnpm lint             # ESLint
 
 # 构建
 pnpm build            # 构建所有
 ```
 
-## 官方资源
+---
+
+## 🔗 官方资源
 
 - [官方文档](https://doc.vben.pro)
 - [GitHub](https://github.com/vbenjs/vue-vben-admin)
 - [Iconify 图标](https://icon-sets.iconify.design/)
 - [ECharts](https://echarts.apache.org/zh/index.html)
 
-## 目录结构
+---
+
+## 📂 目录结构
 
 ```
 vben/
 ├── SKILL.md                    # 主入口
 ├── README.md                   # 快速入门
-├── references/
-│   ├── rules.md                # ⚠️ 强制开发规范（必读）
-│   ├── components/             # 组件文档
-│   ├── core/                   # 核心功能
-│   ├── features/              # 配置定制
-│   └── guides/                 # 开发指南
-│       └── component-splitting.md
+└── references/
+    ├── rules.md                # ⚠️ 强制开发规范（必读）
+    ├── components/             # 组件文档
+    │   ├── table.md           # 表格
+    │   ├── form.md            # 表单
+    │   ├── modal-drawer.md    # 弹窗
+    │   ├── echarts.md         # 图表
+    │   ├── page.md            # 页面
+    │   ├── dropdown-popconfirm.md
+    │   └── count-to-animator.md
+    ├── core/                   # 核心功能
+    │   ├── route.md           # 路由
+    │   ├── access.md          # 权限
+    │   ├── api.md             # API
+    │   ├── internationalization.md
+    │   ├── styling.md         # 主题
+    │   ├── icons.md           # 图标
+    │   ├── state-management.md
+    │   ├── adapter.md
+    │   └── login.md
+    ├── features/              # 功能配置
+    │   ├── download.md
+    │   └── preferences.md
+    └── guides/                 # 开发指南
+        ├── component-splitting.md  # ⚠️ 组件拆分（强制规范）
+        ├── quick-start.md
+        ├── playground-index.md
+        ├── build-deploy.md
+        └── project-structure.md
 ```

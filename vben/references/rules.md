@@ -160,14 +160,48 @@ const hasData = data && Object.keys(data).length > 0;
 
 ---
 
-## 🚨 9. `useVbenVxeGrid` 的 `gridOptions.height` 禁止设置为 `'auto'`
+## 🚨 9. 组件必须拆分（>200行 或 ≥2个功能区块）
+
+> **组件超过 200 行或包含多个独立功能区块时，必须拆分！**
+>
+> 详见：[组件拆分最佳实践](guides/component-splitting.md)
+
+| 指标 | 阈值 | 动作 |
+|------|------|------|
+| 代码行数 | > 200 行 | 考虑拆分 |
+| 功能区块 | ≥ 2 个独立区块 | 必须拆分 |
+| 组件嵌套 | > 3 层 | 重构结构 |
+
+**典型拆分模式：**
+
+```
+dashboard/
+├── components/
+│   ├── charts/          # 图表组件
+│   │   └── DeviceDonutChart.vue
+│   ├── cards/           # 统计卡片
+│   │   └── OverviewCards.vue
+│   └── list/            # 数据列表
+│       └── AlertList.vue
+├── index.vue            # 主组件（布局协调）
+└── mock.ts              # Mock 数据
+```
+
+**数据管理策略：**
+- 静态配置：组件内部定义
+- 业务数据：通过 props 传递
+- 事件回调：通过 emits 传递
+
+---
+
+## 🚨 10. `useVbenVxeGrid` 的 `gridOptions.height` 禁止设置为 `'auto'`
 
 > **默认创建时不设置 height 属性，让表格自动适应容器高度。**
 
 | 场景 | ❌ 禁止使用 | ✅ 正确使用 |
 |------|------------|-----------|
 | 表格高度 | `height: 'auto'` | 不设置 height 属性（默认自适应） |
-| 固定高度 | `height: 500` | `height: 'auto'` + 外层容器固定高度 |
+| 固定高度 | ❌ 禁止 | 需要固定高度时设置具体数值 |
 
 ```typescript
 // ❌ 错误：height: 'auto' 会导致布局问题
