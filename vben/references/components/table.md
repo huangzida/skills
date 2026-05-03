@@ -86,11 +86,28 @@ proxyConfig: {
 
 ```typescript
 toolbarConfig: {
-  custom: true,    // 自定义列
-  export: true,    // 导出
+  search: true,    // 搜索
+  export: false,    // 导出
   refresh: true,   // 刷新
   zoom: true,      // 全屏
+  custom: true,    // 自定义列
+  resizable: true, // 可调整列宽
 }
+```
+
+> **⚠️ 重要**：当 `export: true` 时，必须同时设置 `exportConfig: {}`，否则 vxe-table 控制台会报 `"缺少必要的 export-config 参数"` 警告。
+
+```typescript
+// 导出功能完整配置
+exportConfig: {},
+toolbarConfig: {
+  search: true,
+  export: true,
+  refresh: true,
+  zoom: true,
+  custom: true,
+  resizable: true,
+},
 ```
 
 ### 工具栏显示条件

@@ -288,3 +288,16 @@ src/locales/langs/zh-CN/
 ```typescript
 // 使用：$t('firmware-management.title')
 ```
+
+## 🚨 12. useVbenVxeGrid toolbarConfig的固定设置
+
+```typescript
+toolbarConfig: {
+  search: true,
+  export: false,
+  refresh: true,
+  zoom: true,
+  custom: true,
+  resizable: true,
+}
+```

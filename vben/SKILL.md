@@ -124,17 +124,6 @@ Example -- destructive op:
 >
 > 违反这些规范将导致 lint 错误或运行时异常。
 
-**快速检查清单：**
-- [ ] 使用 `useVbenVxeGrid`（非 antdv Table）
-- [ ] 使用 `useVbenModal`（非 antdv Modal）
-- [ ] 使用 `useVbenForm`（非原生表单）
-- [ ] 组件 >200行 或 ≥2个功能区块 → 必须拆分
-- [ ] 禁止非空断言 `!`，用 `??` / `?.`
-- [ ] 深拷贝用 `structuredClone()`
-- [ ] 图标用 `@vben/icons`
-- [ ] `gridOptions.height` 不设置 `'auto'`
-- [ ] 每个页面独立一个国际化 JSON 文件
-
 ---
 
 ## 📋 功能开发速查表
@@ -148,6 +137,7 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 // 关键特性：proxyConfig、pagerConfig、columns、slots
 // ⚠️ 操作按钮用 #toolbar-actions（非 #toolbar-tools）
 // ⚠️ Grid 不要设置 table-title，标题由路由 meta.title 控制
+// ⚠️ toolbarConfig.export = true 时必须同时设置 exportConfig: {}，否则控制台报警告
 ```
 
 ### 表单开发
