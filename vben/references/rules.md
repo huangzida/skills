@@ -72,21 +72,21 @@ const conditions = (data.triggerConditions?.length ?? 0) > 0
 |------|------------|-----------|
 | 路由/菜单图标 | 自行编写 `<svg>` | `@vben/icons` 导出的 Lucide 图标 |
 | 组件内图标 | 内联 SVG path | `@vben/icons` 导出的 Lucide/SVG 图标 |
-| 统计卡片图标 | 手写 SVG path | `@vben/icons` 的 `SvgXxxIcon`（需 `markRaw`） |
+| 统计卡片图标 | 手写 SVG path | `@vben/icons` 的 `SvgXxx`（需 `markRaw`） |
 
 **图标分类：**
 - **Lucide 图标**（通用）：`import { Eye, Search, Settings, Package } from '@vben/icons'`
-- **SVG 业务图标**（统计卡片等）：`import { SvgAlarmIcon, SvgDeviceIcon } from '@vben/icons'`
+- **SVG 业务图标**（统计卡片等）：`import { SvgAlarm, SvgDevice } from '@vben/icons'`
 
 ```vue
 <!-- ✅ 正确 -->
 <script setup lang="ts">
-import { Eye, SvgDeviceIcon } from '@vben/icons';
+import { Eye, SvgDevice } from '@vben/icons';
 import { markRaw } from 'vue';
 </script>
 <template>
   <Eye class="h-6 w-6" />
-  <component :is="markRaw(SvgDeviceIcon)" class="h-6 w-6" />
+  <component :is="markRaw(SvgDevice)" class="h-6 w-6" />
 </template>
 ```
 

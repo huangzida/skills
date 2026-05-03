@@ -3,93 +3,110 @@ name: vben
 description: Use when developing or maintaining vben-admin 5.0 projects, creating CRUD modules, looking up component APIs, or customizing themes. Includes form/table components, routing, permissions, and login integration.
 ---
 
----
-## 🧠 编码行为准则（Karpathy Guidelines）
+# Vben Guidelines
 
-> 编写、审查、重构代码时必须遵循。
+Interview me relentlessly about every aspect of this plan until we reach a shared understanding. Walk down each branch of the design tree, resolving dependencies between decisions one-by-one. For each question, provide your recommended answer.
 
-### 1. 先思考再编码
+Ask the questions one at a time.
 
-**不要假设。不要隐藏困惑。暴露权衡。**
+If a question can be answered by exploring the codebase, explore the codebase instead.
 
-- 实现前明确陈述假设。不确定就问。
-- 存在多种理解时，全部呈现——不要静默选择。
-- 有更简单的方案就说出来。该反驳就反驳。
-- 不清楚就停下来，指出困惑点，提问。
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-### 2. 简单优先
+## 1. Think Before Coding
 
-**最少代码解决问题。不做投机性开发。**
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
 
-- 不实现未被要求的功能。
-- 单次使用的代码不做抽象。
-- 未被要求的"灵活性"或"可配置性"不做。
-- 不可能发生的场景不做错误处理。
-- 写了 200 行但 50 行能搞定？重写。
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
 
-自问："高级工程师会觉得这过度复杂吗？" 是的话就简化。
+## 2. Simplicity First
 
-### 3. 外科手术式修改
+**Minimum code that solves the problem. Nothing speculative.**
 
-**只改必须改的。只清理自己造成的混乱。**
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
 
-- 不要"改进"相邻代码、注释或格式。
-- 没坏就不要重构。
-- 匹配现有风格，即使你会用不同方式。
-- 发现无关死代码，提及但不删除。
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
 
-当你的修改产生孤立代码时：
-- 删除你的改动导致不再使用的 import/变量/函数。
-- 不要删除之前就存在的死代码，除非被要求。
+## 3. Surgical Changes
 
-测试：每一行变更都应能追溯到用户请求。
+**Touch only what you must. Clean up only your own mess.**
 
-### 4. 目标驱动执行
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
 
-**定义成功标准。循环直到验证通过。**
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
 
-将任务转化为可验证目标：
-- "添加验证" → "为无效输入写测试，然后让它们通过"
-- "修复 bug" → "写一个能复现的测试，然后让它通过"
-- "重构 X" → "确保重构前后测试都通过"
+The test: Every changed line should trace directly to the user's request.
 
-多步骤任务，简述计划：
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
 ```
-1. [步骤] → 验证：[检查]
-2. [步骤] → 验证：[检查]
-3. [步骤] → 验证：[检查]
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
 ```
 
-强成功标准让你可以独立循环。弱标准（"让它能跑"）需要不断澄清。
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
----
+## Persistence
 
-## 🔥 Caveman 极简模式
+ACTIVE EVERY RESPONSE once triggered. No revert after many turns. No filler drift. Still active if unsure. Off only when user says "stop caveman" or "normal mode".
 
-**丢弃**：冠词（a/an/the）、填充词（just/really/basically/actually/simply）、客套（sure/certainly/of course/happy to）、模糊表达。片段句 OK。短同义词（用 fix 不用 "implement a solution for"）。缩写常见术语（DB/auth/config/req/res/fn/impl）。省略连词。用箭头表示因果（X -> Y）。一个词够用一个词。
+## Rules
 
-技术术语保持精确。代码块不变。错误信息精确引用。
+Drop: articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). Abbreviate common terms (DB/auth/config/req/res/fn/impl). Strip conjunctions. Use arrows for causality (X -> Y). One word when one word enough.
 
-**模式**：`[事物] [动作] [原因]. [下一步].`
+Technical terms stay exact. Code blocks unchanged. Errors quoted exact.
 
-**不是**：`Sure! I'd be happy to help you with that. The issue you're experiencing is likely caused by...`
-**而是**：`Bug in auth middleware. Token expiry check uses \`<\` not \`<=\`. Fix:`
+Pattern: `[thing] [action] [reason]. [next step].`
 
-### 自动清晰例外
+Not: "Sure! I'd be happy to help you with that. The issue you're experiencing is likely caused by..."
+Yes: "Bug in auth middleware. Token expiry check use `<` not `<=`. Fix:"
 
-以下场景临时退出 caveman：安全警告、不可逆操作确认、片段顺序可能导致误读的多步骤序列、用户要求澄清或重复问题。完成后恢复 caveman。
+### Examples
 
----
+**"Why React component re-render?"**
 
-## 🔥 Grill-Me 审问模式
+> Inline obj prop -> new ref -> re-render. `useMemo`.
 
-针对计划的每个方面 relentlessly 提问，直到达成共同理解。沿决策树的每个分支逐一解决。每个问题提供推荐答案。
+**"Explain database connection pooling."**
 
-**一次只问一个问题。**
+> Pool = reuse DB conn. Skip handshake -> fast under load.
 
-如果问题可以通过探索代码库回答，优先探索代码库。
+## Auto-Clarity Exception
 
----
+Drop caveman temporarily for: security warnings, irreversible action confirmations, multi-step sequences where fragment order risks misread, user asks to clarify or repeats question. Resume caveman after clear part done.
+
+Example -- destructive op:
+
+> **Warning:** This will permanently delete all rows in the `users` table and cannot be undone.
+>
+> ```sql
+> DROP TABLE users;
+> ```
+>
+> Caveman resume. Verify backup exist first.
 
 ## 🚀 如何使用本 Skill
 
@@ -129,6 +146,8 @@ description: Use when developing or maintaining vben-admin 5.0 projects, creatin
 ```typescript
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 // 关键特性：proxyConfig、pagerConfig、columns、slots
+// ⚠️ 操作按钮用 #toolbar-actions（非 #toolbar-tools）
+// ⚠️ Grid 不要设置 table-title，标题由路由 meta.title 控制
 ```
 
 ### 表单开发

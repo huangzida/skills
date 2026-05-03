@@ -23,15 +23,15 @@ const [Grid] = useVbenVxeGrid({
   },
 });
 </script>
-
+```vue
 <template>
   <Grid>
-    <template #toolbar-tools />
+    <template #toolbar-actions />
   </Grid>
 </template>
 ```
 
-> **⚠️ 重要**：必须添加 `<template #toolbar-tools />` 才会渲染工具栏，即使为空也需要！
+> **⚠️ 重要**：必须添加 `<template #toolbar-actions />` 或 `<template #toolbar-tools />` 才会渲染工具栏，即使为空也需要！
 
 ## 核心配置
 
@@ -98,14 +98,13 @@ toolbarConfig: {
 使用工具栏时必须满足以下条件：
 
 1. **设置 toolbarConfig**：在 gridOptions 中配置工具栏选项
-2. **使用工具栏插槽**：必须在模板中使用 `#toolbar-tools` 或 `#toolbar-actions` 插槽
+2. **使用工具栏插槽**：必须在模板中使用 `#toolbar-actions` 或 `#toolbar-tools` 插槽
 
 ```vue
 <template>
   <Grid>
-    <!-- 必须添加至少一个工具栏插槽，工具栏才会显示 -->
-    <template #toolbar-tools>
-      <!-- 你的自定义工具按钮 -->
+    <template #toolbar-actions>
+      <Button type="primary" @click="handleCreate">新增</Button>
     </template>
   </Grid>
 </template>
@@ -114,8 +113,27 @@ toolbarConfig: {
 如果不需要自定义内容，可以使用空插槽：
 
 ```vue
-<Grid><template #toolbar-tools /></Grid>
+<Grid><template #toolbar-actions /></Grid>
 ```
+
+### 工具栏插槽选择
+
+| 插槽 | 用途 | 位置 |
+|------|------|------|
+| `#toolbar-actions` | 操作按钮（新增、导出等） | 工具栏左侧 |
+| `#toolbar-tools` | 工具按钮（刷新、密度等） | 工具栏右侧 |
+
+```vue
+<Grid>
+  <template #toolbar-actions>
+    <Button type="primary" @click="handleCreate">新增</Button>
+  </template>
+</Grid>
+```
+
+> **⚠️ 最佳实践**：操作按钮（新增、导出等）固定使用 `#toolbar-actions`，不要使用 `#toolbar-tools`。`#toolbar-tools` 用于右侧工具区域。
+
+> **⚠️ 最佳实践**：Grid 不要设置 `table-title` prop，表格标题通过路由 `meta.title` 自动显示。
 
 ### 分页
 

@@ -99,20 +99,20 @@ const iconName = computed(() => {
 // packages/icons/src/svg/index.ts
 import { createIconifyIcon } from '@vben-core/icons';
 
-const SvgTestIcon = createIconifyIcon('svg:test');
+const SvgTest = createIconifyIcon('svg:test');
 
-export { SvgTestIcon };
+export { SvgTest };
 ```
 
 #### 使用 Svg 图标
 
 ```vue
 <script setup lang="ts">
-import { SvgTestIcon } from '@vben/icons';
+import { SvgTest } from '@vben/icons';
 </script>
 
 <template>
-  <SvgTestIcon class="size-5" />
+  <SvgTest class="size-5" />
 </template>
 ```
 

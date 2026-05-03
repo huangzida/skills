@@ -174,14 +174,14 @@ import DetailDrawer from './components/DetailDrawer.vue';
 ```typescript
 // mock.ts - 独立文件管理所有 Mock 数据
 import { markRaw } from 'vue';
-import { SvgProductIcon, SvgDeviceIcon } from '@vben/icons';
+import { SvgProduct, SvgDevice } from '@vben/icons';
 
 export const overviewItems = [
   {
     title: 'dashboard.totalProducts',
     value: 1248,
     color: '#3b82f6',
-    icon: markRaw(SvgProductIcon),
+    icon: markRaw(SvgProduct),
   },
   // ...
 ];
