@@ -8,6 +8,8 @@ vben-admin 提供的表格组件，基于 vxe-table，集成了搜索表单。
 
 ## 基础用法
 
+> **⚠️ 最小配置原则**：`useVbenVxeGrid` 只需配置 `formOptions.schema`、`gridOptions.columns` 和 `gridOptions.proxyConfig.ajax.query`，其他配置已在全局 `adapter/vxe-table.ts` 中预设。详见 [rules.md](../rules.md)。
+
 ```vue
 <script setup lang="ts">
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
@@ -18,11 +20,15 @@ const [Grid] = useVbenVxeGrid({
       { type: 'seq', title: '序号', width: 50 },
       { field: 'name', title: '姓名', sortable: true },
     ],
-    data: [],
-    rowConfig: { keyField: 'id' },
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues) => ({ items: [], total: 0 }),
+      },
+    },
   },
 });
 </script>
+```
 ```vue
 <template>
   <Grid>
@@ -37,11 +43,13 @@ const [Grid] = useVbenVxeGrid({
 
 ### 列配置
 
+> **⚠️ 最佳实践**：普通数据列不要设置 `width`，表格会自适应列宽。仅 `type: 'seq'`、`type: 'checkbox'`、操作列等固定宽度列才需要设置 `width`。
+
 ```typescript
 columns: [
   { type: 'seq', title: '序号', width: 50 },
   { type: 'checkbox', title: '勾选', width: 50 },
-  { field: 'name', title: '姓名', width: 120, sortable: true },
+  { field: 'name', title: '姓名', sortable: true },
   { field: 'status', title: '状态', cellRender: { name: 'CellTag' } },
 ]
 ```
@@ -91,24 +99,10 @@ toolbarConfig: {
   refresh: true,   // 刷新
   zoom: true,      // 全屏
   custom: true,    // 自定义列
-  resizable: true, // 可调整列宽
 }
 ```
 
 > **⚠️ 重要**：当 `export: true` 时，必须同时设置 `exportConfig: {}`，否则 vxe-table 控制台会报 `"缺少必要的 export-config 参数"` 警告。
-
-```typescript
-// 导出功能完整配置
-exportConfig: {},
-toolbarConfig: {
-  search: true,
-  export: true,
-  refresh: true,
-  zoom: true,
-  custom: true,
-  resizable: true,
-},
-```
 
 ### 工具栏显示条件
 
@@ -158,7 +152,7 @@ toolbarConfig: {
 pagerConfig: {
   enabled: true,
   currentPage: 1,
-  pageSize: 10,
+  pageSize: 20,
   pageSizes: [10, 20, 50, 100],
 }
 ```
@@ -175,7 +169,7 @@ const [Grid] = useVbenVxeGrid({
       { fieldName: 'name', label: '姓名', component: 'Input' },
       { fieldName: 'status', label: '状态', component: 'Select', options: [...] },
     ],
-    submitOnChange: true,
+    submitOnEnter: true,
   },
   gridOptions: { ... },
 });
@@ -584,7 +578,7 @@ const [Grid] = useVbenVxeGrid({
         },
       },
     ],
-    submitOnChange: true,
+    submitOnEnter: true,
   },
 });
 ```
@@ -619,9 +613,7 @@ const [Grid] = useVbenVxeGrid({
 
 ### Q: 工具栏不显示？
 
-检查以下两点：
-1. 是否配置了 `toolbarConfig`
-2. 是否在模板中使用了 `#toolbar-tools` 或 `#toolbar-actions` 插槽
+是否在模板中使用了 `#toolbar-tools` 或 `#toolbar-actions` 插槽
 
 ### Q: 展开行不显示？
 

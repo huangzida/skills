@@ -4,7 +4,7 @@
 
 ---
 
-## 🚨 1. 必须使用 vben 官方组件
+## 🚨 必须使用 vben 官方组件
 
 > **严禁自己实现 Table 和 Modal！vben-admin 提供了完整的适配层，必须使用！**
 
@@ -14,6 +14,8 @@
 | 弹窗 | `antdv-next Modal`、`antdv-next Drawer` | `useVbenModal` from `@vben/common-ui` |
 | 表单 | 原生 Input/Select 拼装 | `useVbenForm` from `#/adapter/form` |
 | 按钮 | `antdv-next Button`、原生 button | `VbenButton` from `@vben/common-ui` |
+| 确认弹窗 | `antdv-next Modal.confirm` | `vbenConfirm` from `@vben/common-ui` |
+| 删除确认 | 自行封装 confirm 逻辑 | `deleteConfirm` from `#/components/delete-confirm` |
 
 **违规示例：**
 ```vue
@@ -43,7 +45,70 @@ import { VbenButton } from '@vben/common-ui';
 
 ---
 
-## 🚨 2. 禁止使用非空断言 `!`
+## 🚨 禁止使用 `Modal.confirm`，使用 vben 的 `vbenConfirm` / `deleteConfirm`
+
+> **严禁使用 `antdv-next` 的 `Modal.confirm`！vben-admin 提供了完整的确认弹窗方案。**
+
+| 场景 | ❌ 禁止使用 | ✅ 必须使用 |
+|------|------------|-----------|
+| 删除确认 | `Modal.confirm` + 自行处理 | `deleteConfirm` from `#/components/delete-confirm` |
+| 其他二次确认 | `Modal.confirm` | `vbenConfirm` from `@vben/common-ui` |
+
+### 删除确认：使用 `deleteConfirm`
+
+```typescript
+import { deleteConfirm } from '#/components/delete-confirm';
+
+deleteConfirm(row.name, async () => {
+  await deleteApi(row.id);
+  gridApi.reload();
+});
+```
+
+### 其他确认：使用 `vbenConfirm`
+
+```typescript
+import { vbenConfirm } from '@vben/common-ui';
+
+vbenConfirm({
+  content: '确定要执行此操作吗？',
+  icon: 'question',
+  title: '确认操作',
+}).then(() => {
+  // 确认后执行
+}).catch(() => {});
+```
+
+### `vbenConfirm` 常用配置
+
+| 参数 | 说明 |
+|------|------|
+| `title` | 弹窗标题 |
+| `content` | 弹窗内容（支持字符串或 VNode） |
+| `icon` | 图标：`'success'` / `'info'` / `'warning'` / `'error'` / `'question'` |
+| `centered` | 是否居中显示 |
+| `confirmText` | 确认按钮文字 |
+| `cancelText` | 取消按钮文字 |
+| `beforeClose` | 关闭前回调，支持异步，返回 `false` 阻止关闭 |
+| `footer` | 自定义底部内容 |
+
+```typescript
+// 异步确认
+vbenConfirm({
+  beforeClose({ isConfirm }) {
+    if (!isConfirm) return;
+    return new Promise((resolve) => setTimeout(resolve, 1000));
+  },
+  content: '异步操作确认',
+  icon: 'question',
+}).then(() => {
+  // 确认后执行
+}).catch(() => {});
+```
+
+---
+
+## 🚨 禁止使用非空断言 `!`
 
 > **必须使用空值合并 `??` 或可选链 `?.`**
 
@@ -64,7 +129,7 @@ const conditions = (data.triggerConditions?.length ?? 0) > 0
 
 ---
 
-## 🚨 3. 图标必须使用 `@vben/icons`
+## 🚨 图标必须使用 `@vben/icons`
 
 > **禁止自行实现 SVG 或使用内联 SVG！**
 
@@ -97,7 +162,7 @@ import { markRaw } from 'vue';
 
 ---
 
-## 🚨 4. 深拷贝必须使用 `structuredClone()`
+## 🚨 深拷贝必须使用 `structuredClone()`
 
 > **禁止使用 `JSON.parse(JSON.stringify(...))`！**
 
@@ -111,7 +176,7 @@ const copy = structuredClone(data);
 
 ---
 
-## 🚨 5. 禁止在 componentProps 中使用 `style` 对象
+## 🚨 禁止在 componentProps 中使用 `style` 对象
 
 > **会导致 `CSSStyleDeclaration` 运行时错误！使用 Tailwind `class` 替代。**
 
@@ -125,7 +190,7 @@ componentProps: { class: 'w-full' }
 
 ---
 
-## 🚨 6. `Promise.reject()` 必须包含 Error 对象
+## 🚨 `Promise.reject()` 必须包含 Error 对象
 
 ```typescript
 // ❌ 错误
@@ -137,7 +202,7 @@ Promise.reject(new Error('reason'));
 
 ---
 
-## 🚨 7. 弹窗标题必须使用 computed 动态计算 + connectedComponent 模式
+## 🚨 弹窗标题必须使用 computed 动态计算 + connectedComponent 模式
 
 > **共用 Create/Edit 弹窗时，禁止硬编码 title！禁止使用 defineExpose + ref 调用！**
 
@@ -199,13 +264,7 @@ if (data?.id) { ... }
 
 ---
 
-## 🚨 8. 禁止添加代码注释
-
-> **除非用户明确要求，否则不要添加任何代码注释。**
-
----
-
-## 🚨 9. 组件必须拆分（>200行 或 ≥2个功能区块）
+## 🚨 组件必须拆分（>200行 或 ≥2个功能区块）
 
 > **组件超过 200 行或包含多个独立功能区块时，必须拆分！**
 >
@@ -239,7 +298,87 @@ dashboard/
 
 ---
 
-## 🚨 10. `useVbenVxeGrid` 的 `gridOptions.height` 禁止设置为 `'auto'`
+## 🚨 `useVbenVxeGrid` 只需配置最小必要字段
+
+> **全局配置已在 `adapter/vxe-table.ts` 中预设，禁止重复配置已有全局默认值的字段！**
+>
+> 全局已配置：`align`、`border`、`columnConfig`、`minHeight`、`formConfig`、`formOptions.submitOnEnter`、`proxyConfig`（`autoLoad`/`response`/`showActiveMsg`/`showResponseMsg`）、`round`、`showOverflow`、`stripe`、`keepSource`、`pagerConfig`、`rowConfig`、`toolbarConfig`。
+
+### 只需配置的字段
+
+| 参数 | 必须配置 | 说明 |
+|------|---------|------|
+| `formOptions.schema` | ✅ | 搜索表单字段定义 |
+| `gridOptions.columns` | ✅ | 表格列定义 |
+| `gridOptions.proxyConfig.ajax.query` | ✅ | 数据查询函数 |
+
+### 禁止重复配置的字段
+
+| 字段 | 原因 |
+|------|------|
+| `align` | 全局已设 `'center'` |
+| `border` | 全局已设 `false` |
+| `columnConfig` | 全局已设 `resizable: true` |
+| `formConfig` | 全局已设 `enabled: false` |
+| `formOptions.submitOnEnter` | 全局已设 `true` |
+| `keepSource` | 全局已设 `true` |
+| `pagerConfig` | 全局已设 `pageSize: 20` |
+| `proxyConfig.autoLoad` | 全局已设 `true` |
+| `proxyConfig.response` | 全局已设 `{ result: 'items', total: 'total', list: 'items' }` |
+| `proxyConfig.showActiveMsg` | 全局已设 `true` |
+| `proxyConfig.showResponseMsg` | 全局已设 `false` |
+| `round` | 全局已设 `true` |
+| `rowConfig` | 全局已设 `keyField: 'id'` |
+| `showOverflow` | 全局已设 `true` |
+| `stripe` | 全局已设 `true` |
+| `toolbarConfig` | 全局已设完整配置 |
+| `gridOptions.height` | 不设置，默认自适应 |
+
+```typescript
+// ❌ 错误：重复配置全局已有的字段
+const [Grid] = useVbenVxeGrid({
+  formOptions: {
+    schema: [...],
+    show: true,
+    submitOnEnter: true,
+  },
+  gridOptions: {
+    columns: [...],
+    height: 'auto',
+    showOverflow: true,
+    border: false,
+    round: true,
+    stripe: true,
+    keepSource: true,
+    rowConfig: { keyField: 'id' },
+    columnConfig: { resizable: true },
+    pagerConfig: { pageSize: 20 },
+    toolbarConfig: { search: true, refresh: true, zoom: true, custom: true },
+    proxyConfig: {
+      autoLoad: true,
+      response: { result: 'items', total: 'total', list: 'items' },
+      ajax: { query: ... },
+    },
+  } as VxeTableGridOptions,
+});
+
+// ✅ 正确：只配置最小必要字段
+const [Grid] = useVbenVxeGrid({
+  formOptions: {
+    schema: [...],
+  },
+  gridOptions: {
+    columns: [...],
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues) => ({ items: [], total: 0 }),
+      },
+    },
+  } as VxeTableGridOptions,
+});
+```
+
+### `gridOptions.height` 禁止设置为 `'auto'`
 
 > **默认创建时不设置 height 属性，让表格自动适应容器高度。**
 
@@ -260,9 +399,31 @@ gridOptions: {
 }
 ```
 
+### `gridOptions.columns` 禁止设置 `width`
+
+> **表格会自适应列宽，手动设置 width 会导致布局不灵活。**
+>
+> 特殊列（`type: 'seq'`、`type: 'checkbox'`、操作列等固定宽度列除外）。
+
+```typescript
+// ❌ 错误：普通列设置 width
+columns: [
+  { type: 'seq', title: '序号', width: 50 },
+  { field: 'name', title: '名称', width: 120 },
+  { field: 'status', title: '状态', width: 100 },
+]
+
+// ✅ 正确：普通列不设置 width，让表格自适应
+columns: [
+  { type: 'seq', title: '序号', width: 50 },
+  { field: 'name', title: '名称' },
+  { field: 'status', title: '状态' },
+]
+```
+
 ---
 
-## 🚨 11. 每个页面必须使用独立的国际化文件
+## 🚨 每个页面必须使用独立的国际化文件
 
 > **每个页面/功能模块必须创建独立的 JSON 国际化文件，禁止将多个页面的翻译混入同一个文件（如 system-management.json）！**
 
@@ -289,15 +450,3 @@ src/locales/langs/zh-CN/
 // 使用：$t('firmware-management.title')
 ```
 
-## 🚨 12. useVbenVxeGrid toolbarConfig的固定设置
-
-```typescript
-toolbarConfig: {
-  search: true,
-  export: false,
-  refresh: true,
-  zoom: true,
-  custom: true,
-  resizable: true,
-}
-```

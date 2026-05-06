@@ -248,6 +248,41 @@ const [Drawer, drawerApi] = useVbenDrawer({
 
 弹窗组件，用于信息展示、确认等场景。
 
+### 确认弹窗（confirm / deleteConfirm）
+
+> **⚠️ 禁止使用 `antdv-next` 的 `Modal.confirm`！**
+
+**删除确认**：使用全局封装的 `deleteConfirm`（自动处理确认弹窗 + 成功提示）：
+
+```typescript
+import { deleteConfirm } from '#/components/delete-confirm';
+
+deleteConfirm(row.name, async () => {
+  await deleteApi(row.id);
+  gridApi.reload();
+});
+```
+
+**其他二次确认**：使用 vben 的 `vbenConfirm`：
+
+```typescript
+import { vbenConfirm } from '@vben/common-ui';
+
+vbenConfirm({
+  content: '确定要执行此操作吗？',
+  icon: 'question',
+  title: '确认操作',
+}).then(() => {
+  // 确认后执行
+}).catch(() => {});
+```
+
+`vbenConfirm` 也支持简写：
+
+```typescript
+vbenConfirm('确定要执行此操作吗？').then(() => { ... }).catch(() => {});
+```
+
 ### 基础用法
 
 ```typescript
