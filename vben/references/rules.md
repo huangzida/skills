@@ -450,3 +450,58 @@ src/locales/langs/zh-CN/
 // 使用：$t('firmware-management.title')
 ```
 
+---
+
+## 🚨 国际化文案优先使用公共 common.json
+
+> **新增文案时，必须先查看 `common.json` 中是否已有相同含义的文案，优先复用！只有 common 中没有时才在页面级国际化文件中新增。**
+
+**公共文案文件**：`packages/locales/src/langs/zh-CN/common.json`
+
+| 场景 | ❌ 禁止使用 | ✅ 正确使用 |
+|------|------------|-----------|
+| 通用操作 | 页面文件中新增 `"edit": "编辑"` | `$t('common.edit')` |
+| 删除确认 | 页面文件中新增 `"delete": "删除"` | `$t('common.delete')` |
+| 操作成功 | 页面文件中新增 `"success": "操作成功"` | `$t('common.operationSuccess')` |
+| 加载失败 | 页面文件中新增 `"loadError": "加载失败"` | `$t('common.loadError')` |
+
+**common.json 常用文案速查：**
+
+| key | 值 |
+|-----|---|
+| `common.edit` | 编辑 |
+| `common.delete` | 删除 |
+| `common.create` | 新增 |
+| `common.confirm` | 确认 |
+| `common.cancel` | 取消 |
+| `common.save` | 保存 |
+| `common.reset` | 重置 |
+| `common.search` | 搜索 |
+| `common.query` | 查询 |
+| `common.back` | 返回 |
+| `common.operationSuccess` | 操作成功 |
+| `common.operationFailed` | 操作失败 |
+| `common.loadError` | 加载数据失败 |
+| `common.uploadSuccess` | 上传成功 |
+| `common.uploadFailed` | 上传失败 |
+| `common.importSuccess` | 导入成功 |
+| `common.importFailed` | 导入失败 |
+| `common.confirmDelete` | 确认删除 |
+| `common.confirmDeleteMessage` | 确定要删除「{0}」吗？ |
+| `common.deleteSuccess` | 删除成功 |
+| `common.noData` | 暂无数据 |
+| `common.enabled` | 已启用 |
+| `common.disabled` | 已禁用 |
+| `common.operation` | 操作 |
+
+```typescript
+// ❌ 错误：在页面文件中重复定义通用文案
+// alarm-channel.json
+{ "edit": "编辑", "delete": "删除", "success": "操作成功" }
+
+// ✅ 正确：使用 common 中的公共文案
+$t('common.edit')
+$t('common.delete')
+$t('common.operationSuccess')
+```
+
