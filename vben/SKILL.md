@@ -145,6 +145,7 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 ```typescript
 import { useVbenForm } from '#/adapter/form';
 // 关键特性：componentProps、valueFormat、fieldMappingTime
+// ⚠️ 同时存在开始时间+结束时间时，合并为 RangePicker + fieldMappingTime，禁止两个独立 DatePicker
 ```
 
 ### 弹窗/抽屉
@@ -152,6 +153,9 @@ import { useVbenForm } from '#/adapter/form';
 ```typescript
 import { useVbenModal } from '@vben/common-ui';
 // 关键特性：connectedComponent、appendToMain
+// ⚠️ 弹窗中的表单必须使用 useVbenForm（禁止手写原生表单元素）
+// ⚠️ 表单分隔使用 Divider 组件（component: 'Divider'），禁止用 h4/标题文字
+// ⚠️ 上传组件使用适配器注册的 component: 'Upload'，禁止自定义 Upload 模板
 ```
 
 ### 仪表板/统计卡片
@@ -194,6 +198,15 @@ meta: {
 }
 ```
 
+### 视图切换（列表/卡片/网格）
+> ⚡ 必查：[视图切换](references/components/segmented.md)
+```typescript
+import { Segmented } from 'antdv-next';
+import { h } from 'vue';
+// ⚠️ 禁止手写按钮组实现视图切换！统一使用 Segmented 组件
+// 全局样式已在 packages/styles/src/antdv-next/index.css 配置，无需额外样式
+```
+
 ---
 
 ## 📁 完整文档索引
@@ -209,6 +222,7 @@ meta: {
 | [页面](references/components/page.md) | page.md | Page 组件 |
 | [下拉菜单](references/components/dropdown-popconfirm.md) | dropdown-popconfirm.md | Popconfirm 事件处理 |
 | [数字动画](references/components/count-to-animator.md) | count-to-animator.md | 数字滚动动画 |
+| [视图切换](references/components/segmented.md) | segmented.md | Segmented 列表/卡片/网格切换 |
 | [路由配置](references/core/route.md) | route.md | children、meta、order |
 | [权限控制](references/core/access.md) | access.md | permission |
 | [API请求](references/core/api.md) | api.md | requestClient |
@@ -292,7 +306,8 @@ vben/
     │   ├── echarts.md         # 图表
     │   ├── page.md            # 页面
     │   ├── dropdown-popconfirm.md
-    │   └── count-to-animator.md
+    │   ├── count-to-animator.md
+    │   └── segmented.md
     ├── core/                   # 核心功能
     │   ├── route.md           # 路由
     │   ├── access.md          # 权限

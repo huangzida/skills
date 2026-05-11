@@ -10,14 +10,116 @@
 
 ## ⚠️ 重要规则
 
-### 组件拆分原则
+### 弹窗表单必须使用 useVbenForm
 
-> **组件超过 200 行或包含 ≥2 个独立功能区块时必须拆分！**
+> **禁止在弹窗/抽屉中手写原生表单元素（`<input>`、`<select>`、`<textarea>`）！**
 >
-> 详见：[强制开发规范 - 规则 #9](../rules.md#-9-组件必须拆分200行-或≥2个功能区块)
+> 必须使用 `useVbenForm` 的 schema 定义表单字段。
+
+✅ 正确写法：
+```typescript
+const [Form, formApi] = useVbenForm({
+  schema: [
+    { component: 'Input', fieldName: 'name', label: '名称', rules: 'required' },
+    { component: 'Select', fieldName: 'type', label: '类型',
+      componentProps: { options: [...] } },
+  ],
+});
+
+const [Modal, modalApi] = useVbenModal({
+  onConfirm() { formApi.submitForm(); },
+});
+```
+
+❌ 错误写法：
+```html
+<!-- 禁止在弹窗模板中手写表单 -->
+<input v-model="formData.name" class="..." />
+<select v-model="formData.type" class="...">...</select>
+<textarea v-model="formData.reason" class="..."></textarea>
+```
+
+### 表单分隔使用 Divider
+
+> **禁止用 `<h4>` 标题文字分隔表单模块！** 使用 `component: 'Divider'`。
+
+```typescript
+function useDivider(title: string) {
+  return {
+    component: 'Divider',
+    fieldName: `divider_${title}`,
+    formItemClass: 'col-span-2',
+    labelWidth: 0,
+    renderComponentContent: () => ({ default: () => h('div', title) }),
+  };
+}
+
+// 在 schema 中使用
+schema: [
+  useDivider('基本信息'),
+  { component: 'Input', fieldName: 'name', label: '名称' },
+  useDivider('采购信息'),
+  { component: 'DatePicker', fieldName: 'date', label: '日期' },
+]
+```
+
+### 上传组件使用适配器注册的 Upload
+
+> **禁止在弹窗中自定义 Upload 模板！** 使用 schema 中的 `component: 'Upload'`。
+>
+> 适配器已注册 `Upload` 组件，自带图片预览、裁剪、大小限制等功能。
+
+```typescript
+// ✅ 正确：在 schema 中使用
+{
+  component: 'Upload',
+  fieldName: 'attachments',
+  label: '上传附件',
+  formItemClass: 'col-span-2',
+  componentProps: {
+    maxCount: 5,
+    accept: '.jpg,.png,.pdf,.doc',
+  },
+}
+
+// ❌ 错误：在模板中自定义 Upload
+// <Upload :max-count="5" accept=".jpg,.png">
+//   <button>上传</button>
+// </Upload>
+```
+
+### 开始/结束时间合并为 RangePicker
+
+> **禁止用两个独立 DatePicker 表示开始和结束时间！**
+>
+> 同时存在开始时间 + 结束时间时，必须合并为 `RangePicker` + `fieldMappingTime`。
+
+```typescript
+// ✅ 正确：RangePicker + fieldMappingTime
+const [Form, formApi] = useVbenForm({
+  schema: [
+    {
+      component: 'RangePicker',
+      fieldName: 'dateRange',
+      label: '日期范围',
+    },
+  ],
+  fieldMappingTime: [
+    ['dateRange', 'startTime', 'endTime'],
+  ],
+});
+// formApi.getValues() => { startTime: '2025-01-01', endTime: '2025-12-31', ... }
+
+// ❌ 错误：两个独立 DatePicker
+// { component: 'DatePicker', fieldName: 'startDate', label: '开始日期' },
+// { component: 'DatePicker', fieldName: 'endDate', label: '结束日期' },
+```
 
 ### 配置统一原则
-✅ 最佳实践 ：所有配置参数统一在 useVbenModal / useVbenForm 的参数中设置，模板保持干净。
+
+> **禁止在 `<Modal>` / `<Drawer>` 模板上设置属性！** 所有配置统一在 `useVbenModal` / `useVbenForm` 参数中设置，保持模板的整洁和纯粹。
+
+✅ 正确写法：所有配置在脚本中统一管理，模板只负责结构。
 
 ```typescript
 <script setup lang="ts">
@@ -25,50 +127,54 @@ import { useVbenModal } from '@vben/common-ui';
 import { useVbenForm } from '#/adapter/form';
 
 const [Form, formApi] = useVbenForm({
-  handleSubmit: onSubmit,
-  layout: 'vertical',
   schema: [...],
-  showDefaultActions: false,
+  handleSubmit: onSubmit,
 });
 
 const [Modal, modalApi] = useVbenModal({
   fullscreenButton: true,
   draggable: true,
-  title: modalTitle.value,
   onConfirm() { onSubmit(); },
-  onOpenChange(isOpen: boolean) { ... },
+  onOpenChange(isOpen) {
+    if (isOpen) {
+      const data = modalApi.getData<RecordType>();
+      modalApi.setState({
+        title: data?.id ? $t('common.edit') : $t('common.create'),
+      });
+      if (data?.id) {
+        formApi.setValues(data);
+      }
+    }
+  },
 });
 </script>
 
 <template>
-  <Modal>
-    <Form />
-  </Modal>
-</template>
-```
-❌ 错误写法：配置分散在脚本和模板中，模板中的 props 会覆盖脚本中的配置。
-
-```typescript
-<script setup lang="ts">
-const [Modal, modalApi] = useVbenModal({
-  fullscreenButton: true, // 这里设置了 true
-  ...
-});
-</script>
-
-<template>
-  <Modal
-    :fullscreen-button="false" <!-- 这里又设置为 false，会覆盖上面的配置！ -->
-  >
-    ...
+  <Modal>
+    <Form />
   </Modal>
 </template>
 ```
-关键点 ：模板中的 props 会覆盖 useVbenModal / useVbenForm 内部的默认值。如果想在脚本中统一管理配置，模板中就不要重复设置相同的 prop。
+
+❌ 错误写法：在模板 `<Modal>` 上设置属性，配置分散且会覆盖脚本中的配置。
+
+```html
+<template>
+  <!-- ❌ 禁止在模板上设置属性！ -->
+  <Modal :title="getTitle" :fullscreen-button="false">
+    <Form />
+  </Modal>
+</template>
+```
+
+关键点：
+- 模板中的 props 优先级高于 `useVbenModal` 参数，会覆盖脚本中的配置
+- 动态标题使用 `modalApi.setState({ title })` 在 `onOpenChange` 中设置
+- 模板保持 `<Modal><Form /></Modal>` 最简结构，不添加任何属性
 
 ## ❌ 常见错误
 
-### 错误1：在子组件中使用 useVbenDrawer/useVbenModal
+### 错误：在子组件中使用 useVbenDrawer/useVbenModal
 
 **❌ 错误写法**：子组件直接使用 `useVbenDrawer`
 
@@ -108,26 +214,7 @@ defineExpose({
 </template>
 ```
 
-### 错误2：直接在 template 中导入原生组件
-
-**❌ 错误写法**：直接导入原生组件
-
-```vue
-<!-- ❌ 错误 -->
-<script setup>
-import { Button, Input } from 'antdv-next';
-</script>
-<template>
-  <Button>提交</Button>
-  <Input v-model="value" />
-</template>
-```
-
-**✅ 正确做法**：
-- 对于 Vben 封装的表单/表格等，使用 `useVbenForm`、`useVbenVxeGrid` 的 schema 定义
-- 对于按钮等简单组件，可以直接导入 `import { Button } from 'antdv-next'`，但需确保组件已在适配器中注册
-
-### 错误3：父子组件状态管理混乱
+### 错误：父子组件状态管理混乱
 
 **❌ 错误写法**：通过 reactive 状态传递
 
@@ -483,29 +570,21 @@ const [Modal, modalApi] = useVbenModal({
 
 ## 动态标题（新增/编辑切换）
 
-根据弹窗是否携带数据，动态显示「新增」或「编辑」标题。推荐使用 `computed` + 模板 `:title` 绑定。
+根据弹窗是否携带数据，动态显示「新增」或「编辑」标题。推荐在 `onOpenChange` 中使用 `modalApi.setState` 设置标题，保持模板纯净。
 
-### ✅ 推荐写法：computed + 模板绑定（子组件）
+### ✅ 推荐写法：modalApi.setState（子组件）
 
 ```typescript
 // modules/form.vue
-const formData = ref<SomeType>();
-const getTitle = computed(() =>
-  formData.value?.id
-    ? $t('ui.actionTitle.edit', [$t('module.name')])
-    : $t('ui.actionTitle.create', [$t('module.name')]),
-);
-
 const [Modal, modalApi] = useVbenModal({
   onOpenChange(isOpen) {
     if (isOpen) {
       const data = modalApi.getData<SomeType>();
+      modalApi.setState({
+        title: data?.id ? $t('common.edit') : $t('common.create'),
+      });
       if (data?.id) {
-        formData.value = data;
         formApi.setValues(data);
-      } else {
-        formData.value = undefined;
-        formApi.resetForm();
       }
     }
   },
@@ -515,7 +594,7 @@ const [Modal, modalApi] = useVbenModal({
 ```vue
 <!-- modules/form.vue -->
 <template>
-  <Modal :title="getTitle">
+  <Modal>
     <Form />
   </Modal>
 </template>
@@ -550,6 +629,25 @@ function handleEdit(row: RecordType) {
 </template>
 ```
 
+### ❌ 不推荐：computed + 模板 `:title` 绑定
+
+```typescript
+// 需要额外维护 formData ref，增加状态管理复杂度
+const formData = ref<SomeType>();
+const getTitle = computed(() =>
+  formData.value?.id
+    ? $t('ui.actionTitle.edit', [$t('module.name')])
+    : $t('ui.actionTitle.create', [$t('module.name')]),
+);
+```
+
+```html
+<!-- ❌ 在模板上设置属性，违反配置统一原则 -->
+<Modal :title="getTitle">
+  <Form />
+</Modal>
+```
+
 ### ❌ 不推荐：defineExpose + ref 调用
 
 ```typescript
@@ -561,23 +659,9 @@ const modalRef = ref<InstanceType<typeof SomeModal>>();
 modalRef.value?.open(row);
 ```
 
-### ❌ 不推荐：modalApi.setState
-
-```typescript
-// 每次 onOpenChange 都要手动调用 setState，容易遗漏
-onOpenChange(isOpen) {
-  if (isOpen) {
-    if (data) {
-      modalApi.setState({ title: '编辑' });
-    } else {
-      modalApi.setState({ title: '新增' });
-    }
-  }
-}
-```
-
-**推荐原因**：
-- `computed` 是响应式的，数据变化标题自动更新，无需手动同步
+**推荐 `modalApi.setState` 的原因**：
+- 无需额外维护 `formData` ref 和 `computed`，减少状态管理复杂度
+- 配置集中在 `useVbenModal` 中，模板保持 `<Modal><Form /></Modal>` 最简结构
 - `connectedComponent` 模式通过 `setData` 传数据，无需 `defineExpose`，更解耦
 - 判断 `data?.id` 而非 `!!data`，避免空对象导致误判为编辑模式
 
